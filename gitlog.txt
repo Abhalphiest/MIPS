@@ -1,3 +1,9 @@
+commit 8efc9aa3b2bdf4e9b2069c5aaa47ebda107261a3
+Author: Margaret <med7068@rit.edu>
+Date:   Sat Mar 19 12:01:52 2016 -0400
+
+    dimension entry and validation implemented and tested, will work on building the board next
+
 commit 3b8d9dbe08350e4219e68ecb845541307a9945a0
 Author: Margaret <med7068@rit.edu>
 Date:   Sat Mar 19 11:38:51 2016 -0400
