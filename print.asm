@@ -47,6 +47,7 @@ illegal_input_value:
 newline:
 	.asciiz "\n"
 program_banner:
+	.ascii  "\n"
 	.ascii 	"******************\n"
 	.ascii 	"**  3-In-A-Row  **\n"
 	.asciiz "******************\n\n"
@@ -68,8 +69,15 @@ predef_tbl:		#for print lookup table
 	.word final_puzzle
 	.word newline
 
+color_tbl:
+	.byte BLANK
+	.byte WHITE
+	.byte BLACK
+
 	.text
 
+row:
+	.space 13	#for printing out the rows of the board
 #
 # TEXT
 #
@@ -115,8 +123,69 @@ print_predef:
 # Returns:	Nothing
 #
 print_board:
-
+	addi	$sp, $sp, -8	#stack management
+	sw	$ra, 0($sp)
+	sw	$s0, 4($sp)
 	
+	or	$s0, $a0, $zero	#pointer on our board
+	la	$a0, row	#get some memory to build our row in
+	or	$t2, $a0, $zero	#our character ptr in our row
+
+	ori	$t4, $zero, CORNER
+	ori	$t5, $zero, HORIZONTAL_BAR
+	ori	$t6, $zero, VERT_BAR
+
+	sb	$t4, 0($t2)	#make our first corner
+	addi	$t2, $t2, 1	#increment
+	or	$t0, $t0, $zero	#loop control
+top_loop:
+	beq	$t0, a1, top_loop_done
+	sb	$t5, 0($t2)	#put a horizontal bar
+	addi	$t2, $t2, 1	#increment pointer and loop control
+	addi	$t0, $t0, 1
+	j	top_loop
+top_loop_done:		
+	sb	$t4, 0($t2)	#make our second corner
+	sb	$zero, 1($t2)	#null terminate
+
+	or	$t0, $t0, $zero	#outer loop control
+	or	$t1, $t1, $zero	#inner loop control
+board_out_loop:
+	beq	$t0, $a1, out_loop_done
+	or	$t2, $a0, $zero	#reset our character ptr
+	sb	$t6, 0($t2)	#make a vert bar
+	add	$t2, $t2, 1
+board_in_loop:
+	beq	$t1, $a1, in_loop_done
+	lw	$t3, 0($s0)	#get the value of current square
+	la	$t7, color_tbl	#load our table
+	add	$t7, $t7, $t3	#get offset
+	lb	$t3, 0($t7)	#get the ascii value from table
+	sb	$t3, 0($t2)	#store in our byte array
+	
+	addi	$t2, $t2, 1	#move row ptr
+	addi	$s0, $s0, 4	#move board ptr
+	addi	$t1, $t1, 1	#increment loop control
+	j board_in_loop
+in_loop_done:
+	sb	$t6, 0($t2)	#make a vert bar
+	sb	$zero, 1($t2)	#null terminate
+	addi	$t0, $t0, 1	#increment count
+	j	board_out_loop
+
+out_loop_done:
+	
+bottom_loop:
+
+
+print_board_done:
+	sb	$t4, 0($t2)	#last corner
+	sb	$zero, 1($t2)	#null terminate
+	
+	lw	$s0, 4($sp)
+	lw	$ra, 0($sp)	#restore stack and return
+	addi	$sp, $sp, 8
+	jr	$ra
 
 
 
