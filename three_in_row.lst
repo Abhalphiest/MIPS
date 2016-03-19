@@ -31,136 +31,139 @@
   31 0000               #
   32 0000               	.globl main		#entry point for program
   33 0000               	.globl print_predef	#for printing
-  34 0000               
-  35 0000               	.data
-  36 0000               	.align 2
-  37 0000               board_arr:
-  38 0000 00000000		.space 400		#the maximum size we would need for our
+  34 0000               	.globl print_board
+  35 0000               
+  36 0000               	.data
+  37 0000               	.align 2
+  38 0000               board_arr:
+  39 0000 00000000		.space 400		#the maximum size we would need for our
           00000000
           00000000
           00000000
           00000000
           00000000
-  39 0190               				#board, 10x10x4 bytes
-  40 0190               
+  40 0190               				#board, 10x10x4 bytes
   41 0190               
-  42 0000               	.text
-  43 0000               	.align 2	
-  44 0000               #
-  45 0000               # Name: main
-  46 0000               #
-  47 0000               # Description:	Handles input, then calls appropriate functions for the 
-  48 0000               # 		continuation of the program, and terminates.
-  49 0000               #
-  50 0000               #		The program itself takes an nxn 3 in a row puzzle and
-  51 0000               #		solves it.
-  52 0000               #
+  42 0190               
+  43 0000               	.text
+  44 0000               	.align 2	
+  45 0000               #
+  46 0000               # Name: main
+  47 0000               #
+  48 0000               # Description:	Handles input, then calls appropriate functions for the 
+  49 0000               # 		continuation of the program, and terminates.
+  50 0000               #
+  51 0000               #		The program itself takes an nxn 3 in a row puzzle and
+  52 0000               #		solves it.
   53 0000               #
-  54 0000               
-  55 0000               main:
-  56 0000 23BDFFF0		addi	$sp, $sp, -16 		#make space for return address
-  57 0004 AFBF0000		sw	$ra, 0($sp)	
-  58 0008 AFB00004		sw	$s0, 4($sp)
-  59 000c AFB10008		sw	$s1, 8($sp)
-  60 0010 AFB2000C		sw	$s2, 12($sp)
-  61 0014               
-  62 0014 34020005		ori	$v0, $zero, READ_INT	#get the dimension
-  63 0018 0000000C		syscall
-  64 001c               
-  65 001c 00408025		or	$s0, $v0, $zero		#check value for evenness
-  66 0020 32080001		andi	$t0, $s0, 1		#will be 0 if even, 1 if odd
-  67 0024 11000003		beq	$t0, $zero, even
-  68 0028 34040000		ori	$a0, $zero, INVALID_BOARD_SIZE
-  69 002c 0C000000		jal	print_predef		#print out our error message
-  70 0030 08000028		j	main_done		#get out of the program
-  71 0034               even:
-  72 0034 2A080002		slti	$t0, $s0, 2		#less than 2
-  73 0038 2A09000B		slti	$t1, $s0, 11		#less than 11
-  74 003c 01094820		add	$t1, $t0, $t1		#if less than 2, will be 2
-  75 0040               					#if greater than 10 will be 0
-  76 0040               					#if in range will be 1
-  77 0040               
-  78 0040 39290001		xori	$t1, $t1, 1		#if in range will be 0
-  79 0044 11200003		beq	$t1, $zero, dim_valid	#break on within range
-  80 0048 34040000		ori 	$a0, $zero, INVALID_BOARD_SIZE	
-  81 004c 0C000000		jal	print_predef		#print our error message
-  82 0050 08000028		j	main_done
-  83 0054               dim_valid:	
-  84 0054 01009024		and	$s2, $t0, $zero		#set our loop control variable to 0
-  85 0058 3C040000		la	$a0, board_arr		#get our memory for the board array
+  54 0000               #
+  55 0000               
+  56 0000               main:
+  57 0000 23BDFFF0		addi	$sp, $sp, -16 		#make space for return address
+  58 0004 AFBF0000		sw	$ra, 0($sp)	
+  59 0008 AFB00004		sw	$s0, 4($sp)
+  60 000c AFB10008		sw	$s1, 8($sp)
+  61 0010 AFB2000C		sw	$s2, 12($sp)
+  62 0014               
+  63 0014 34020005		ori	$v0, $zero, READ_INT	#get the dimension
+  64 0018 0000000C		syscall
+  65 001c               
+  66 001c 00408025		or	$s0, $v0, $zero		#check value for evenness
+  67 0020 32080001		andi	$t0, $s0, 1		#will be 0 if even, 1 if odd
+  68 0024 11000003		beq	$t0, $zero, even
+  69 0028 34040000		ori	$a0, $zero, INVALID_BOARD_SIZE
+  70 002c 0C000000		jal	print_predef		#print out our error message
+  71 0030 0800002B		j	main_done		#get out of the program
+  72 0034               even:
+  73 0034 2A080002		slti	$t0, $s0, 2		#less than 2
+  74 0038 2A09000B		slti	$t1, $s0, 11		#less than 11
+  75 003c 01094820		add	$t1, $t0, $t1		#if less than 2, will be 2
+  76 0040               					#if greater than 10 will be 0
+  77 0040               					#if in range will be 1
+  78 0040               
+  79 0040 39290001		xori	$t1, $t1, 1		#if in range will be 0
+  80 0044 11200003		beq	$t1, $zero, dim_valid	#break on within range
+  81 0048 34040000		ori 	$a0, $zero, INVALID_BOARD_SIZE	
+  82 004c 0C000000		jal	print_predef		#print our error message
+  83 0050 0800002B		j	main_done
+  84 0054               dim_valid:	
+  85 0054 01009024		and	$s2, $t0, $zero		#set our loop control variable to 0
+  86 0058 3C040000		la	$a0, board_arr		#get our memory for the board array
      005c 34840000
-  86 0060 02100018		mul	$s0, $s0
-     0064 00008012
-  87 0068 00008812		mflo	$s1			#s1 is now n^2
-  88 006c               	
-  89 006c               board_loop:
-  90 006c 12510007		beq	$s2, $s1, board_loop_done
-  91 0070 34020005		ori	$v0, $zero, READ_INT	#get our next square
-  92 0074 0000000C		syscall	
-  93 0078 00022825		or	$a1, $zero, $v0		#get ready to pass it to be checked
-  94 007c 0C00002E		jal	enter_square_value
-  95 0080 22520001		addi	$s2, $s2, 1
-  96 0084 20840004		addi	$a0, $a0, 4		#integer is a byte
-  97 0088 0800001B		j	board_loop		#back to top
-  98 008c               board_loop_done:
-  99 008c 34040003		ori	$a0, $zero, PROGRAM_BANNER	#print our banner
- 100 0090 0C000000		jal	print_predef
- 101 0094 34040004		ori	$a0, $zero, INITIAL_PUZZLE	#print header
- 102 0098 0C000000		jal	print_predef
- 103 009c               	# print board
- 104 009c               	
- 105 009c               	
- 106 009c               	#solve
- 107 009c               
- 108 009c               	#solution over
- 109 009c               	
- 110 009c 34040005		ori	$a0, $zero, FINAL_PUZZLE
- 111 00a0               	#print board
- 112 00a0               main_done:
- 113 00a0 8FB2000C		lw	$s2, 12($sp)
- 114 00a4 8FB10008		lw	$s1, 8($sp)
- 115 00a8 8FB00004		lw	$s0, 4($sp)		#restore stack
- 116 00ac 8FBF0000		lw	$ra, 0($sp)
- 117 00b0 23BD0010		addi	$sp, $sp, 16	
- 118 00b4 03E00008		jr	$ra			#return
- 119 00b8               #
- 120 00b8               # Name: enter_square_value
- 121 00b8               #
- 122 00b8               # Description: 	Validates a read in value for a square (i.e. it is 0, 1, or 2)
- 123 00b8               #		and then enters it in to the allocated array for our board.
- 124 00b8               #
- 125 00b8               # Arguments:	$a0 is pointer to next array element
- 126 00b8               #		$a1 is read number
- 127 00b8               #
- 128 00b8               # Returns: 	nothing
- 129 00b8               #
- 130 00b8               
- 131 00b8               enter_square_value:
- 132 00b8 23BDFFF8		addi	$sp, $sp, -8
- 133 00bc AFBF0000		sw	$ra, 0($sp)
- 134 00c0 AFA40004		sw	$a0, 4($sp)		#main will want this to persist
- 135 00c4               
- 136 00c4 00A0402A		slt	$t0, $a1, $zero		#check if below zero
- 137 00c8 28A90003		slti	$t1, $a1, 3		#check if below 3
- 138 00cc 01284820		add	$t1, $t1, $t0		#will be 1 if within range, else 0 or 2
- 139 00d0 39290001		xori	$t1, $t1, 1		#will be 0 if within range, else 1 or 2
- 140 00d4               	
- 141 00d4 11200004		beq	$t1, $zero, valid	#break on valid
- 142 00d8 34040001		ori	$a0, $zero, INVALID_INPUT_VALUE
- 143 00dc 0C000000		jal	print_predef		#give error message
- 144 00e0 3402000A		ori	$v0, $zero, EXIT
- 145 00e4 0000000C		syscall				#forcibly exit the program
- 146 00e8               valid:
- 147 00e8 AC850000		sw	$a1, 0($a0)		#a0 will have never been touched
- 148 00ec               					#if we get this far
- 149 00ec               	
- 150 00ec 8FA40004		lw	$a0, 4($sp)
- 151 00f0 8FBF0000		lw	$ra, 0($sp)
- 152 00f4 23BD0008		addi	$sp, $sp, 8
- 153 00f8 03E00008		jr	$ra
- 154 00fc               
- 155 00fc               
- 156 00fc               
+  87 0060 02100018		mult	$s0, $s0
+  88 0064 00008812		mflo	$s1			#s1 is now n^2
+  89 0068               	
+  90 0068               board_loop:
+  91 0068 12510007		beq	$s2, $s1, board_loop_done
+  92 006c 34020005		ori	$v0, $zero, READ_INT	#get our next square
+  93 0070 0000000C		syscall	
+  94 0074 00022825		or	$a1, $zero, $v0		#get ready to pass it to be checked
+  95 0078 0C000031		jal	enter_square_value
+  96 007c 22520001		addi	$s2, $s2, 1
+  97 0080 20840004		addi	$a0, $a0, 4		#integer is a byte
+  98 0084 0800001A		j	board_loop		#back to top
+  99 0088               board_loop_done:
+ 100 0088 34040003		ori	$a0, $zero, PROGRAM_BANNER	#print our banner
+ 101 008c 0C000000		jal	print_predef
+ 102 0090 34040004		ori	$a0, $zero, INITIAL_PUZZLE	#print header
+ 103 0094 0C000000		jal	print_predef
+ 104 0098               	# print board
+ 105 0098 3C040000		la	$a0, board_arr
+     009c 34840000
+ 106 00a0 02002825		or	$a1, $s0, $zero		#load args for board printing
+ 107 00a4 0C000000		jal	print_board
+ 108 00a8               	
+ 109 00a8               	#solve
+ 110 00a8               
+ 111 00a8               	#solution over
+ 112 00a8               	
+ 113 00a8 34040005		ori	$a0, $zero, FINAL_PUZZLE
+ 114 00ac               	#print board
+ 115 00ac               main_done:
+ 116 00ac 8FB2000C		lw	$s2, 12($sp)
+ 117 00b0 8FB10008		lw	$s1, 8($sp)
+ 118 00b4 8FB00004		lw	$s0, 4($sp)		#restore stack
+ 119 00b8 8FBF0000		lw	$ra, 0($sp)
+ 120 00bc 23BD0010		addi	$sp, $sp, 16	
+ 121 00c0 03E00008		jr	$ra			#return
+ 122 00c4               #
+ 123 00c4               # Name: enter_square_value
+ 124 00c4               #
+ 125 00c4               # Description: 	Validates a read in value for a square (i.e. it is 0, 1, or 2)
+ 126 00c4               #		and then enters it in to the allocated array for our board.
+ 127 00c4               #
+ 128 00c4               # Arguments:	$a0 is pointer to next array element
+ 129 00c4               #		$a1 is read number
+ 130 00c4               #
+ 131 00c4               # Returns: 	nothing
+ 132 00c4               #
+ 133 00c4               
+ 134 00c4               enter_square_value:
+ 135 00c4 23BDFFF8		addi	$sp, $sp, -8
+ 136 00c8 AFBF0000		sw	$ra, 0($sp)
+ 137 00cc AFA40004		sw	$a0, 4($sp)		#main will want this to persist
+ 138 00d0               
+ 139 00d0 00A0402A		slt	$t0, $a1, $zero		#check if below zero
+ 140 00d4 28A90003		slti	$t1, $a1, 3		#check if below 3
+ 141 00d8 01284820		add	$t1, $t1, $t0		#will be 1 if within range, else 0 or 2
+ 142 00dc 39290001		xori	$t1, $t1, 1		#will be 0 if within range, else 1 or 2
+ 143 00e0               	
+ 144 00e0 11200004		beq	$t1, $zero, valid	#break on valid
+ 145 00e4 34040001		ori	$a0, $zero, INVALID_INPUT_VALUE
+ 146 00e8 0C000000		jal	print_predef		#give error message
+ 147 00ec 3402000A		ori	$v0, $zero, EXIT
+ 148 00f0 0000000C		syscall				#forcibly exit the program
+ 149 00f4               valid:
+ 150 00f4 AC850000		sw	$a1, 0($a0)		#a0 will have never been touched
+ 151 00f8               					#if we get this far
+ 152 00f8               	
+ 153 00f8 8FA40004		lw	$a0, 4($sp)
+ 154 00fc 8FBF0000		lw	$ra, 0($sp)
+ 155 0100 23BD0008		addi	$sp, $sp, 8
+ 156 0104 03E00008		jr	$ra
+ 157 0108               
+ 158 0108               
+ 159 0108               
 
 
 EXIT                 = 0000000A   
@@ -173,12 +176,13 @@ NEWLINE              = 00000006
 PROGRAM_BANNER       = 00000003   
 READ_INT             = 00000005   
 board_arr              00000000 R  data 
-board_loop             0000006C R  text 
-board_loop_done        0000008C R  text 
+board_loop             00000068 R  text 
+board_loop_done        00000088 R  text 
 dim_valid              00000054 R  text 
-enter_square_value     000000B8 R  text 
+enter_square_value     000000C4 R  text 
 even                   00000034 R  text 
 main                   00000000 RG text 
-main_done              000000A0 R  text 
+main_done              000000AC R  text 
+print_board            ******** XG
 print_predef           ******** XG
-valid                  000000E8 R  text 
+valid                  000000F4 R  text 

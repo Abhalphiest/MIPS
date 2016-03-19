@@ -32,7 +32,7 @@
   32 0000               BLANK =			46	#period
   33 0000               BLACK =			35	#octothorpe or pound sign
   34 0000               WHITE =			32	#space
-  35 0000               
+  35 0000               NEWLINE =		10
   36 0000               
   37 0000               #
   38 0000               # DATA BLOCK
@@ -57,104 +57,197 @@
   47 0059               newline:
   48 0059 0A00    		.asciiz "\n"
   49 005b               program_banner:
-  50 005b 2A2A2A2A		.ascii 	"******************\n"
+  50 005b 0A      		.ascii  "\n"
+  51 005c 2A2A2A2A		.ascii 	"******************\n"
           2A2A2A2A
           2A2A2A2A
           2A2A2A2A
           2A2A0A  
-  51 006e 2A2A2020		.ascii 	"**  3-In-A-Row  **\n"
+  52 006f 2A2A2020		.ascii 	"**  3-In-A-Row  **\n"
           332D496E
           2D412D52
           6F772020
           2A2A0A  
-  52 0081 2A2A2A2A		.asciiz "******************\n\n"
+  53 0082 2A2A2A2A		.asciiz "******************\n\n"
           2A2A2A2A
           2A2A2A2A
           2A2A2A2A
           2A2A0A0A
           00      
-  53 0096               
-  54 0096               initial_puzzle:
-  55 0096 496E6974		.asciiz "Initial Puzzle\n\n"
+  54 0097               
+  55 0097               initial_puzzle:
+  56 0097 496E6974		.asciiz "Initial Puzzle\n\n"
           69616C20
           50757A7A
           6C650A0A
           00      
-  56 00a7               final_puzzle:
-  57 00a7 46696E61		.asciiz "Final Puzzle\n\n"
+  57 00a8               final_puzzle:
+  58 00a8 46696E61		.asciiz "Final Puzzle\n\n"
           6C205075
           7A7A6C65
           0A0A00  
-  58 00b6               impossible_puzzle:
-  59 00b6 496D706F		.asciiz "Impossible Puzzle\n\n"
+  59 00b7               impossible_puzzle:
+  60 00b7 496D706F		.asciiz "Impossible Puzzle\n\n"
           73736962
           6C652050
           757A7A6C
           650A0A00
-  60 00ca 0000    		.align 2
-  61 00cc               
-  62 00cc               predef_tbl:		#for print lookup table
-  63 00cc 00000000		.word invalid_board_size
-  64 00d0 0000002C		.word illegal_input_value
-  65 00d4 000000B6		.word impossible_puzzle
-  66 00d8 0000005B		.word program_banner
-  67 00dc 00000096		.word initial_puzzle
-  68 00e0 000000A7		.word final_puzzle
-  69 00e4 00000059		.word newline
-  70 00e8               
-  71 0000               	.text
-  72 0000               
-  73 0000               #
-  74 0000               # TEXT
-  75 0000               #
-  76 0000               
-  77 0000               	.globl print_predef	#other files will need to print
-  78 0000               #
-  79 0000               # Name: print_predef
-  80 0000               #
-  81 0000               # Description: 	Prints the appropriate predefined message based on the argument
-  82 0000               #		passed in. Uses the switch statement from above.
-  83 0000               # 
-  84 0000               # Arguments:	$a0 is an int in the range 0 to 6 indicating which message
-  85 0000               #		to print.
-  86 0000               # 
-  87 0000               # Returns:	Nothing
-  88 0000               #
-  89 0000               print_predef:
-  90 0000 23BDFFFC		addi	$sp, $sp, -4	#store our ra and a single s register
-  91 0004 AFBF0000		sw	$ra, 0($sp)
-  92 0008               
-  93 0008 3C080000		la	$t0, predef_tbl	#get our table of things to print
+  61 00cb 00      		.align 2
+  62 00cc               
+  63 00cc               predef_tbl:		#for print lookup table
+  64 00cc 00000000		.word invalid_board_size
+  65 00d0 0000002C		.word illegal_input_value
+  66 00d4 000000B7		.word impossible_puzzle
+  67 00d8 0000005B		.word program_banner
+  68 00dc 00000097		.word initial_puzzle
+  69 00e0 000000A8		.word final_puzzle
+  70 00e4 00000059		.word newline
+  71 00e8               
+  72 00e8               color_tbl:
+  73 00e8 2E      		.byte BLANK
+  74 00e9 20      		.byte WHITE
+  75 00ea 23      		.byte BLACK
+  76 00eb               
+  77 00eb               row:
+  78 00eb 00000000		.space 14	#for printing out the rows of the board
+          00000000
+          00000000
+          0000    
+  79 00f9               #
+  80 00f9               # TEXT
+  81 00f9               #
+  82 0000               	.text
+  83 0000               	.globl print_predef	#other files will need to print
+  84 0000               #
+  85 0000               # Name: print_predef
+  86 0000               #
+  87 0000               # Description: 	Prints the appropriate predefined message based on the argument
+  88 0000               #		passed in. Uses the switch statement from above.
+  89 0000               # 
+  90 0000               # Arguments:	$a0 is an int in the range 0 to 6 indicating which message
+  91 0000               #		to print.
+  92 0000               # 
+  93 0000               # Returns:	Nothing
+  94 0000               #
+  95 0000               print_predef:
+  96 0000 23BDFFFC		addi	$sp, $sp, -4	#store our ra and a single s register
+  97 0004 AFBF0000		sw	$ra, 0($sp)
+  98 0008               
+  99 0008 3C080000		la	$t0, predef_tbl	#get our table of things to print
      000c 35080000
-  94 0010 00042080		sll	$a0, 2		#multiply by 4 for word
-  95 0014 01044020		add	$t0, $t0, $a0	#get ptr to correct mem with stored str
-  96 0018 8D040000		lw	$a0, 0($t0)	#address of our string
-  97 001c 34020004		li	$v0, PRINT_STRING
-  98 0020 0000000C		syscall			#print it
-  99 0024               	
- 100 0024 8FBF0000		lw 	$ra, 0($sp)	#restore stack
- 101 0028 23BD0004		addi	$sp, $sp, 4
- 102 002c 03E00008		jr	$ra		#return
- 103 0030               
- 104 0030               	.globl print_board
- 105 0030               
- 106 0030               #
- 107 0030               # Name: print_board
- 108 0030               # 
- 109 0030               # Description:	Prints out the board currently stored at board_arr in line with
- 110 0030               #		output requirements. Appends a newline after.
- 111 0030               #
- 112 0030               # Arguments:	$a0: ptr to board
- 113 0030               #		$a1: dimension of board
- 114 0030               #
- 115 0030               # Returns:	Nothing
- 116 0030               #
- 117 0030               print_board:
- 118 0030               
- 119 0030               	
- 120 0030               
- 121 0030               
- 122 0030               
+ 100 0010 00042080		sll	$a0, 2		#multiply by 4 for word
+ 101 0014 01044020		add	$t0, $t0, $a0	#get ptr to correct mem with stored str
+ 102 0018 8D040000		lw	$a0, 0($t0)	#address of our string
+ 103 001c 34020004		li	$v0, PRINT_STRING
+ 104 0020 0000000C		syscall			#print it
+ 105 0024               	
+ 106 0024 8FBF0000		lw 	$ra, 0($sp)	#restore stack
+ 107 0028 23BD0004		addi	$sp, $sp, 4
+ 108 002c 03E00008		jr	$ra		#return
+ 109 0030               
+ 110 0030               	.globl print_board
+ 111 0030               
+ 112 0030               #
+ 113 0030               # Name: print_board
+ 114 0030               # 
+ 115 0030               # Description:	Prints out the board currently stored at board_arr in line with
+ 116 0030               #		output requirements. Appends a newline after.
+ 117 0030               #
+ 118 0030               # Arguments:	$a0: ptr to board
+ 119 0030               #		$a1: dimension of board
+ 120 0030               #
+ 121 0030               # Returns:	Nothing
+ 122 0030               #
+ 123 0030               print_board:
+ 124 0030 23BDFFF8		addi	$sp, $sp, -8		#stack management
+ 125 0034 AFBF0000		sw	$ra, 0($sp)
+ 126 0038 AFB00004		sw	$s0, 4($sp)
+ 127 003c               	
+ 128 003c 00808025		or	$s0, $a0, $zero		#pointer on our board
+ 129 0040 3C040000		la	$a0, row		#get some memory to build our row in
+     0044 34840000
+ 130 0048 00805025		or	$t2, $a0, $zero		#our character ptr in our row
+ 131 004c               
+ 132 004c 340C002B		ori	$t4, $zero, CORNER
+ 133 0050 340D002D		ori	$t5, $zero, HORIZONTAL_BAR
+ 134 0054 340E007C		ori	$t6, $zero, VERT_BAR
+ 135 0058 3418000A		ori	$t8, $zero, NEWLINE
+ 136 005c               
+ 137 005c A14C0000		sb	$t4, 0($t2)		#make our first corner
+ 138 0060 214A0001		addi	$t2, $t2, 1		#increment
+ 139 0064 00004025		or	$t0, $zero, $zero	#loop control
+ 140 0068               
+ 141 0068               top_loop:
+ 142 0068 11050004		beq	$t0, $a1, top_loop_done
+ 143 006c A14D0000		sb	$t5, 0($t2)		#put a horizontal bar
+ 144 0070 214A0001		addi	$t2, $t2, 1		#increment pointer and loop control
+ 145 0074 21080001		addi	$t0, $t0, 1
+ 146 0078 0800001A		j	top_loop
+ 147 007c               top_loop_done:		
+ 148 007c A14C0000		sb	$t4, 0($t2)		#make our second corner
+ 149 0080 A1580001		sb	$t8, 1($t2)		#newline
+ 150 0084 A1400002		sb	$zero, 2($t2)		#null terminate
+ 151 0088 34020004		ori	$v0, $zero, PRINT_STRING
+ 152 008c 0000000C		syscall
+ 153 0090 00004025		or	$t0, $zero, $zero	#outer loop control
+ 154 0094               board_out_loop:
+ 155 0094 11050016		beq	$t0, $a1, out_loop_done
+ 156 0098 00805025		or	$t2, $a0, $zero		#reset our character ptr
+ 157 009c A14E0000		sb	$t6, 0($t2)		#make a vert bar
+ 158 00a0 214A0001		add	$t2, $t2, 1
+ 159 00a4 00004825		or	$t1, $zero, $zero	#inner loop control
+ 160 00a8               board_in_loop:
+ 161 00a8 1125000A		beq	$t1, $a1, in_loop_done
+ 162 00ac 8E0B0000		lw	$t3, 0($s0)		#get the value of current square
+ 163 00b0 3C0F0000		la	$t7, color_tbl		#load our table
+     00b4 35EF0000
+ 164 00b8 01EB7820		add	$t7, $t7, $t3		#get offset
+ 165 00bc 81EB0000		lb	$t3, 0($t7)		#get the ascii value from table
+ 166 00c0 A14B0000		sb	$t3, 0($t2)		#store in our byte array
+ 167 00c4               	
+ 168 00c4 214A0001		addi	$t2, $t2, 1		#move row ptr
+ 169 00c8 22100004		addi	$s0, $s0, 4		#move board ptr
+ 170 00cc 21290001		addi	$t1, $t1, 1		#increment loop control
+ 171 00d0 0800002A		j	board_in_loop
+ 172 00d4               in_loop_done:
+ 173 00d4 A14E0000		sb	$t6, 0($t2)		#make a vert bar
+ 174 00d8 A1580001		sb	$t8, 1($t2)		#newline
+ 175 00dc A1400002		sb	$zero, 2($t2)		#null terminate
+ 176 00e0 34020004		ori	$v0, $zero, PRINT_STRING
+ 177 00e4 0000000C		syscall
+ 178 00e8 21080001		addi	$t0, $t0, 1		#increment count
+ 179 00ec 08000025		j	board_out_loop
+ 180 00f0               
+ 181 00f0               out_loop_done:
+ 182 00f0 00805025		or	$t2, $a0, $zero		#reset our row ptr
+ 183 00f4 A14C0000		sb	$t4, 0($t2)		#3rd corner	
+ 184 00f8 214A0001		addi	$t2, $t2, 1		#increment row ptr
+ 185 00fc 00004025		or	$t0, $zero, $zero	#reset loop control 
+ 186 0100               bottom_loop:
+ 187 0100 11050004		beq	$t0, $a1, print_board_done
+ 188 0104 A14D0000		sb	$t5, 0($t2)		#horizontal bar
+ 189 0108 214A0001		addi	$t2, $t2, 1		#increment pointer and loop control
+ 190 010c 21080001		addi	$t0, $t0, 1
+ 191 0110 08000040		j	bottom_loop
+ 192 0114               
+ 193 0114               print_board_done:
+ 194 0114 A14C0000		sb	$t4, 0($t2)		#last corner
+ 195 0118 A1580001		sb	$t8, 1($t2)
+ 196 011c A1400002		sb	$zero, 2($t2)		#null terminate
+ 197 0120 34020004		ori	$v0, $zero, PRINT_STRING
+ 198 0124 0000000C		syscall
+ 199 0128 3C040000		la	$a0, newline
+     012c 34840000
+ 200 0130 34020004		ori	$v0, $zero, PRINT_STRING
+ 201 0134 0000000C		syscall
+ 202 0138               
+ 203 0138 8FB00004		lw	$s0, 4($sp)
+ 204 013c 8FBF0000		lw	$ra, 0($sp)		#restore stack and return
+ 205 0140 23BD0008		addi	$sp, $sp, 8
+ 206 0144 03E00008		jr	$ra
+ 207 0148               
+ 208 0148               
+ 209 0148               
 
 
 BLACK                = 00000023   
@@ -167,18 +260,28 @@ IMPOSSIBLE_PUZZLE    = 00000002
 INITIAL_PUZZLE       = 00000004   
 INVALID_BOARD_SIZE   = 00000000   
 INVALID_INPUT_VALUE  = 00000001   
-NEWLINE              = 00000006   
+NEWLINE              = 0000000A   
 PRINT_STRING         = 00000004   
 PROGRAM_BANNER       = 00000003   
 VERT_BAR             = 0000007C   
 WHITE                = 00000020   
-final_puzzle           000000A7 R  data 
+board_in_loop          000000A8 R  text 
+board_out_loop         00000094 R  text 
+bottom_loop            00000100 R  text 
+color_tbl              000000E8 R  data 
+final_puzzle           000000A8 R  data 
 illegal_input_value    0000002C R  data 
-impossible_puzzle      000000B6 R  data 
-initial_puzzle         00000096 R  data 
+impossible_puzzle      000000B7 R  data 
+in_loop_done           000000D4 R  text 
+initial_puzzle         00000097 R  data 
 invalid_board_size     00000000 R  data 
 newline                00000059 R  data 
+out_loop_done          000000F0 R  text 
 predef_tbl             000000CC R  data 
 print_board            00000030 RG text 
+print_board_done       00000114 R  text 
 print_predef           00000000 RG text 
 program_banner         0000005B R  data 
+row                    000000EB R  data 
+top_loop               00000068 R  text 
+top_loop_done          0000007C R  text 

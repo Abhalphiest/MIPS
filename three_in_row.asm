@@ -31,6 +31,7 @@ NEWLINE	=		6
 #
 	.globl main		#entry point for program
 	.globl print_predef	#for printing
+	.globl print_board
 
 	.data
 	.align 2
@@ -83,7 +84,7 @@ even:
 dim_valid:	
 	and	$s2, $t0, $zero		#set our loop control variable to 0
 	la	$a0, board_arr		#get our memory for the board array
-	mul	$s0, $s0
+	mult	$s0, $s0
 	mflo	$s1			#s1 is now n^2
 	
 board_loop:
@@ -101,7 +102,9 @@ board_loop_done:
 	ori	$a0, $zero, INITIAL_PUZZLE	#print header
 	jal	print_predef
 	# print board
-	
+	la	$a0, board_arr
+	or	$a1, $s0, $zero		#load args for board printing
+	jal	print_board
 	
 	#solve
 
