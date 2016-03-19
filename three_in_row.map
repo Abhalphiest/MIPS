@@ -1,0 +1,62 @@
+Load map
+========
+
+Module:  three_in_row.obj
+ Text segment:  36 bytes, load point 0x00400000
+ Data segment:  408 bytes, load point 0x10000000
+ Symbols:
+                 Name Section Mode    Value
+         FINAL_PUZZLE          A   0x00000005
+             READ_INT          A   0x00000005
+           board_loop   Text   R   0x0040000c
+                error   Text   R   0x00400024
+            dimension   Data   R   0x10000190
+       PROGRAM_BANNER          A   0x00000003
+                 main   Text   RG  0x00400000
+  INVALID_INPUT_VALUE          A   0x00000001
+   INVALID_BOARD_SIZE          A   0x00000000
+              NEWLINE          A   0x00000006
+            board_arr   Data   R   0x10000000
+       INITIAL_PUZZLE          A   0x00000004
+    IMPOSSIBLE_PUZZLE          A   0x00000002
+   enter_square_value   Text   R   0x00400024
+                 EXIT          A   0x0000000a
+      board_loop_done   Text   R   0x00400014
+
+Module:  print.obj
+ Text segment:  48 bytes, load point 0x00400024
+ Data segment:  232 bytes, load point 0x10000198
+ Symbols:
+                 Name Section Mode    Value
+       program_banner   Data   R   0x100001f3
+    impossible_puzzle   Data   R   0x1000024e
+   invalid_board_size   Data   R   0x10000198
+         FINAL_PUZZLE          A   0x00000005
+                BLANK          A   0x0000002e
+       HORIZONTAL_BAR          A   0x0000002d
+                WHITE          A   0x00000020
+              newline   Data   R   0x100001f1
+       initial_puzzle   Data   R   0x1000022e
+         print_predef   Text   RG  0x00400024
+         final_puzzle   Data   R   0x1000023f
+       PROGRAM_BANNER          A   0x00000003
+         PRINT_STRING          A   0x00000004
+             VERT_BAR          A   0x0000007c
+  INVALID_INPUT_VALUE          A   0x00000001
+   INVALID_BOARD_SIZE          A   0x00000000
+                BLACK          A   0x00000023
+               CORNER          A   0x0000002b
+              NEWLINE          A   0x00000006
+          print_board   Text   RG  0x00400054
+  illegal_input_value   Data   R   0x100001c4
+       INITIAL_PUZZLE          A   0x00000004
+    IMPOSSIBLE_PUZZLE          A   0x00000002
+           predef_tbl   Data   R   0x10000264
+                 EXIT          A   0x0000000a
+
+Module:  r2k_startup.obj
+ Text segment:  36 bytes, load point 0x00400054
+ Symbols:
+                 Name Section Mode    Value
+            SYS_EXIT2          A   0x00000011
+       __r2k__entry__   Text   RG  0x00400058

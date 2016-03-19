@@ -14,13 +14,23 @@
 #
 
 # syscalls
-PRINT_STRING =	4
-READ_INT = 	5
-EXIT =		10
+READ_INT = 		5
+EXIT =			10
 
+#PRINT SWITCH LITERALS
+INVALID_BOARD_SIZE =	0
+INVALID_INPUT_VALUE =	1
+IMPOSSIBLE_PUZZLE =	2
+PROGRAM_BANNER =	3
+INITIAL_PUZZLE =	4
+FINAL_PUZZLE =		5
+NEWLINE	=		6
+
+#
+# DATA BLOCK AND GLOBALS
+#
 	.globl main		#entry point for program
-	.globl board_arr	#our board array
-	.globl dimension	#the dimension of our board
+	.globl print_predef	#for printing
 
 	.data
 	.align 2
@@ -49,21 +59,23 @@ main:
 	sw	$ra, 0($sp)	
 	sw	$s0, 4($sp)
 	
-	li	$v0, READ_INT	#get the dimension
-	syscall
+#	li	$v0, READ_INT	#get the dimension
+#	syscall
 
-	or	$s0, $v0, $zero	#check value	
+#	or	$s0, $v0, $zero	#check value	
 
-	and	$t0, $t0, $zero	#set our loop control variable to 0
+#	and	$t0, $t0, $zero	#set our loop control variable to 0
 board_loop:
-	beq	$t0, $v0, board_loop_done
-	
-	
+#	beq	$t0, $v0, board_loop_done
+	li	$a0, PROGRAM_BANNER	
+	jal	print_predef
 board_loop_done:
 
 
-
-
+	lw	$s0, 4($sp)	#restore stack
+	lw	$ra, 0($sp)
+	addi	$sp, $sp, 8	
+	jr	$ra		#return
 #
 # Name: enter_square_value
 #

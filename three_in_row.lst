@@ -1,0 +1,130 @@
+   1 0000               # File: three_in_row.asm
+   2 0000               # Author: Margaret Dorsey
+   3 0000               #
+   4 0000               # Description:
+   5 0000               #
+   6 0000               #
+   7 0000               #
+   8 0000               # Revisions: see gitlog.txt
+   9 0000               #
+  10 0000               
+  11 0000               
+  12 0000               #
+  13 0000               # CONSTANT DEFINITIONS
+  14 0000               #
+  15 0000               
+  16 0000               # syscalls
+  17 0000               READ_INT = 		5
+  18 0000               EXIT =			10
+  19 0000               
+  20 0000               #PRINT SWITCH LITERALS
+  21 0000               INVALID_BOARD_SIZE =	0
+  22 0000               INVALID_INPUT_VALUE =	1
+  23 0000               IMPOSSIBLE_PUZZLE =	2
+  24 0000               PROGRAM_BANNER =	3
+  25 0000               INITIAL_PUZZLE =	4
+  26 0000               FINAL_PUZZLE =		5
+  27 0000               NEWLINE	=		6
+  28 0000               
+  29 0000               #
+  30 0000               # DATA BLOCK AND GLOBALS
+  31 0000               #
+  32 0000               	.globl main		#entry point for program
+  33 0000               	.globl print_predef	#for printing
+  34 0000               
+  35 0000               	.data
+  36 0000               	.align 2
+  37 0000               board_arr:
+  38 0000 00000000		.space 400		#the maximum size we would need for our
+          00000000
+          00000000
+          00000000
+          00000000
+          00000000
+  39 0190               				#board, 10x10x4 bytes
+  40 0190               dimension:
+  41 0190 00000000		.word 0			#will hold the dimension of the board
+  42 0194               
+  43 0194               
+  44 0000               	.text
+  45 0000               	.align 2	
+  46 0000               #
+  47 0000               # Name: main
+  48 0000               #
+  49 0000               # Description:	Handles input, then calls appropriate functions for the 
+  50 0000               # 		continuation of the program, and terminates.
+  51 0000               #
+  52 0000               #		The program itself takes an nxn 3 in a row puzzle and
+  53 0000               #		solves it.
+  54 0000               #
+  55 0000               #
+  56 0000               
+  57 0000               main:
+  58 0000 23BDFFF8		addi	$sp, $sp, -8 	#make space for return address
+  59 0004 AFBF0000		sw	$ra, 0($sp)	
+  60 0008 AFB00004		sw	$s0, 4($sp)
+  61 000c               	
+  62 000c               #	li	$v0, READ_INT	#get the dimension
+  63 000c               #	syscall
+  64 000c               
+  65 000c               #	or	$s0, $v0, $zero	#check value	
+  66 000c               
+  67 000c               #	and	$t0, $t0, $zero	#set our loop control variable to 0
+  68 000c               board_loop:
+  69 000c               #	beq	$t0, $v0, board_loop_done
+  70 000c 34040003		li	$a0, PROGRAM_BANNER	
+  71 0010 0C000000		jal	print_predef
+  72 0014               board_loop_done:
+  73 0014               
+  74 0014               
+  75 0014 8FB00004		lw	$s0, 4($sp)	#restore stack
+  76 0018 8FBF0000		lw	$ra, 0($sp)
+  77 001c 23BD0008		addi	$sp, $sp, 8	
+  78 0020 03E00008		jr	$ra		#return
+  79 0024               #
+  80 0024               # Name: enter_square_value
+  81 0024               #
+  82 0024               # Description: 	Validates a read in value for a square (i.e. it is 0, 1, or 2)
+  83 0024               #		and then enters it in to the allocated array for our board.
+  84 0024               #
+  85 0024               # Arguments:	$a0 is pointer to next array element
+  86 0024               #		$a1 is read number
+  87 0024               #
+  88 0024               # Returns: 	nothing
+  89 0024               #
+  90 0024               
+  91 0024               enter_square_value:
+  92 0024               
+  93 0024               
+  94 0024               #
+  95 0024               # Name: error
+  96 0024               #
+  97 0024               # Description: 	Prints an error message to the screen, cleans up memory,
+  98 0024               #		then exits.
+  99 0024               #
+ 100 0024               # Arguments:	$a0 is the address of the error message to print
+ 101 0024               #
+ 102 0024               # Returns:	nothing
+ 103 0024               #
+ 104 0024               
+ 105 0024               error:
+ 106 0024               	
+
+
+EXIT                 = 0000000A   
+FINAL_PUZZLE         = 00000005   
+IMPOSSIBLE_PUZZLE    = 00000002   
+INITIAL_PUZZLE       = 00000004   
+INVALID_BOARD_SIZE   = 00000000   
+INVALID_INPUT_VALUE  = 00000001   
+NEWLINE              = 00000006   
+PROGRAM_BANNER       = 00000003   
+READ_INT             = 00000005   
+board_arr              00000000 R  data 
+board_loop             0000000C R  text 
+board_loop_done        00000014 R  text 
+dimension              00000190 R  data 
+enter_square_value     00000024 R  text 
+error                  00000024 R  text 
+main                   00000000 RG text 
+print_predef           ******** XG

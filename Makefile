@@ -1,5 +1,5 @@
 #
-# Makefile for CompOrg Experiment 2 - add_strings
+# Makefile for CCS Project
 #
 
 #
@@ -16,7 +16,7 @@ RLINK = /home/fac/wrc/bin/rlink
 #
 # Object files
 #
-OBJFILES = add_strings.obj add_ascii_numbers.obj
+OBJFILES = three_in_row.obj print.obj
 
 #
 # Transformation rule: .asm into .obj
@@ -33,5 +33,5 @@ OBJFILES = add_strings.obj add_ascii_numbers.obj
 #
 # Main target
 #
-add_strings.out:	$(OBJFILES)
+three_in_row.out:	$(OBJFILES)
 	$(RLINK) -m -o $*.out $(OBJFILES) > $*.map

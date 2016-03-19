@@ -8,14 +8,15 @@
 #
 
 #
-# CONSTANTS
+# CONSTANT DEFINITIONS
 #
 
 #syscalls
 PRINT_STRING = 		4
 EXIT = 			10
 
-#switch statement
+#print lookup table, we don't actually use these here
+#but it's nice to have as a reference within the file
 INVALID_BOARD_SIZE = 	0
 INVALID_INPUT_VALUE=	1
 IMPOSSIBLE_PUZZLE =	2
@@ -32,16 +33,20 @@ BLANK =			46	#period
 BLACK =			35	#octothorpe or pound sign
 WHITE =			32	#space
 
+
+#
+# DATA BLOCK
+#
 	.data
 	.align 2
 
 invalid_board_size:
 	.asciiz "Invalid board size, 3-In-A-Row terminating\n"
-illegal_input_value
+illegal_input_value:
 	.asciiz "Illegal input value, 3-In-A-Row terminating\n"
 newline:
 	.asciiz "\n"
-program_banner
+program_banner:
 	.ascii 	"******************\n"
 	.ascii 	"**  3-In-A-Row  **\n"
 	.asciiz "******************\n\n"
@@ -54,7 +59,7 @@ impossible_puzzle:
 	.asciiz "Impossible Puzzle\n\n"
 	.align 2
 
-predef_tbl:		#for print switch statement
+predef_tbl:		#for print lookup table
 	.word invalid_board_size
 	.word illegal_input_value
 	.word impossible_puzzle
@@ -65,6 +70,9 @@ predef_tbl:		#for print switch statement
 
 	.text
 
+#
+# TEXT
+#
 
 	.globl print_predef	#other files will need to print
 #
@@ -79,12 +87,21 @@ predef_tbl:		#for print switch statement
 # Returns:	Nothing
 #
 print_predef:
+	addi	$sp, $sp, -4	#store our ra and a single s register
+	sw	$ra, 0($sp)
 
-
+	la	$t0, predef_tbl	#get our table of things to print
+	sll	$a0, 2		#multiply by 4 for word
+	add	$t0, $t0, $a0	#get ptr to correct mem with stored str
+	lw	$a0, 0($t0)	#address of our string
+	li	$v0, PRINT_STRING
+	syscall			#print it
+	
+	lw 	$ra, 0($sp)	#restore stack
+	addi	$sp, $sp, 4
+	jr	$ra		#return
 
 	.globl print_board
-	.globl board_arr
-	.globl dimension
 
 #
 # Name: print_board
@@ -92,7 +109,8 @@ print_predef:
 # Description:	Prints out the board currently stored at board_arr in line with
 #		output requirements. Appends a newline after.
 #
-# Arguments:	None
+# Arguments:	$a0: ptr to board
+#		$a1: dimension of board
 #
 # Returns:	Nothing
 #

@@ -1,0 +1,184 @@
+   1 0000               # File: 	print.asm
+   2 0000               # Author: 	Margaret Dorsey
+   3 0000               #
+   4 0000               # Description:	Handles all console output, including the preformatted banners
+   5 0000               #		and the printing of both the initial board and the solution
+   6 0000               #
+   7 0000               # Revisions:	See gitlog.txt
+   8 0000               #
+   9 0000               
+  10 0000               #
+  11 0000               # CONSTANT DEFINITIONS
+  12 0000               #
+  13 0000               
+  14 0000               #syscalls
+  15 0000               PRINT_STRING = 		4
+  16 0000               EXIT = 			10
+  17 0000               
+  18 0000               #print lookup table, we don't actually use these here
+  19 0000               #but it's nice to have as a reference within the file
+  20 0000               INVALID_BOARD_SIZE = 	0
+  21 0000               INVALID_INPUT_VALUE=	1
+  22 0000               IMPOSSIBLE_PUZZLE =	2
+  23 0000               PROGRAM_BANNER =	3
+  24 0000               INITIAL_PUZZLE =	4
+  25 0000               FINAL_PUZZLE =		5
+  26 0000               NEWLINE =		6
+  27 0000               
+  28 0000               #ASCII character codes 
+  29 0000               CORNER =		43	#plus sign
+  30 0000               HORIZONTAL_BAR = 	45	#edge of board
+  31 0000               VERT_BAR =		124	#edge of board
+  32 0000               BLANK =			46	#period
+  33 0000               BLACK =			35	#octothorpe or pound sign
+  34 0000               WHITE =			32	#space
+  35 0000               
+  36 0000               
+  37 0000               #
+  38 0000               # DATA BLOCK
+  39 0000               #
+  40 0000               	.data
+  41 0000               	.align 2
+  42 0000               
+  43 0000               invalid_board_size:
+  44 0000 496E7661		.asciiz "Invalid board size, 3-In-A-Row terminating\n"
+          6C696420
+          626F6172
+          64207369
+          7A652C20
+          332D496E
+  45 002c               illegal_input_value:
+  46 002c 496C6C65		.asciiz "Illegal input value, 3-In-A-Row terminating\n"
+          67616C20
+          696E7075
+          74207661
+          6C75652C
+          20332D49
+  47 0059               newline:
+  48 0059 0A00    		.asciiz "\n"
+  49 005b               program_banner:
+  50 005b 2A2A2A2A		.ascii 	"******************\n"
+          2A2A2A2A
+          2A2A2A2A
+          2A2A2A2A
+          2A2A0A  
+  51 006e 2A2A2020		.ascii 	"**  3-In-A-Row  **\n"
+          332D496E
+          2D412D52
+          6F772020
+          2A2A0A  
+  52 0081 2A2A2A2A		.asciiz "******************\n\n"
+          2A2A2A2A
+          2A2A2A2A
+          2A2A2A2A
+          2A2A0A0A
+          00      
+  53 0096               
+  54 0096               initial_puzzle:
+  55 0096 496E6974		.asciiz "Initial Puzzle\n\n"
+          69616C20
+          50757A7A
+          6C650A0A
+          00      
+  56 00a7               final_puzzle:
+  57 00a7 46696E61		.asciiz "Final Puzzle\n\n"
+          6C205075
+          7A7A6C65
+          0A0A00  
+  58 00b6               impossible_puzzle:
+  59 00b6 496D706F		.asciiz "Impossible Puzzle\n\n"
+          73736962
+          6C652050
+          757A7A6C
+          650A0A00
+  60 00ca 0000    		.align 2
+  61 00cc               
+  62 00cc               predef_tbl:		#for print lookup table
+  63 00cc 00000000		.word invalid_board_size
+  64 00d0 0000002C		.word illegal_input_value
+  65 00d4 000000B6		.word impossible_puzzle
+  66 00d8 0000005B		.word program_banner
+  67 00dc 00000096		.word initial_puzzle
+  68 00e0 000000A7		.word final_puzzle
+  69 00e4 00000059		.word newline
+  70 00e8               
+  71 0000               	.text
+  72 0000               
+  73 0000               #
+  74 0000               # TEXT
+  75 0000               #
+  76 0000               
+  77 0000               	.globl print_predef	#other files will need to print
+  78 0000               #
+  79 0000               # Name: print_predef
+  80 0000               #
+  81 0000               # Description: 	Prints the appropriate predefined message based on the argument
+  82 0000               #		passed in. Uses the switch statement from above.
+  83 0000               # 
+  84 0000               # Arguments:	$a0 is an int in the range 0 to 6 indicating which message
+  85 0000               #		to print.
+  86 0000               # 
+  87 0000               # Returns:	Nothing
+  88 0000               #
+  89 0000               print_predef:
+  90 0000 23BDFFFC		addi	$sp, $sp, -4	#store our ra and a single s register
+  91 0004 AFBF0000		sw	$ra, 0($sp)
+  92 0008               
+  93 0008 3C080000		la	$t0, predef_tbl	#get our table of things to print
+     000c 35080000
+  94 0010 00042080		sll	$a0, 2		#multiply by 4 for word
+  95 0014 01044020		add	$t0, $t0, $a0	#get ptr to correct mem with stored str
+  96 0018 8D040000		lw	$a0, 0($t0)	#address of our string
+  97 001c 34020004		li	$v0, PRINT_STRING
+  98 0020 0000000C		syscall			#print it
+  99 0024               	
+ 100 0024 8FBF0000		lw 	$ra, 0($sp)	#restore stack
+ 101 0028 23BD0004		addi	$sp, $sp, 4
+ 102 002c 03E00008		jr	$ra		#return
+ 103 0030               
+ 104 0030               	.globl print_board
+ 105 0030               
+ 106 0030               #
+ 107 0030               # Name: print_board
+ 108 0030               # 
+ 109 0030               # Description:	Prints out the board currently stored at board_arr in line with
+ 110 0030               #		output requirements. Appends a newline after.
+ 111 0030               #
+ 112 0030               # Arguments:	$a0: ptr to board
+ 113 0030               #		$a1: dimension of board
+ 114 0030               #
+ 115 0030               # Returns:	Nothing
+ 116 0030               #
+ 117 0030               print_board:
+ 118 0030               
+ 119 0030               	
+ 120 0030               
+ 121 0030               
+ 122 0030               
+
+
+BLACK                = 00000023   
+BLANK                = 0000002E   
+CORNER               = 0000002B   
+EXIT                 = 0000000A   
+FINAL_PUZZLE         = 00000005   
+HORIZONTAL_BAR       = 0000002D   
+IMPOSSIBLE_PUZZLE    = 00000002   
+INITIAL_PUZZLE       = 00000004   
+INVALID_BOARD_SIZE   = 00000000   
+INVALID_INPUT_VALUE  = 00000001   
+NEWLINE              = 00000006   
+PRINT_STRING         = 00000004   
+PROGRAM_BANNER       = 00000003   
+VERT_BAR             = 0000007C   
+WHITE                = 00000020   
+final_puzzle           000000A7 R  data 
+illegal_input_value    0000002C R  data 
+impossible_puzzle      000000B6 R  data 
+initial_puzzle         00000096 R  data 
+invalid_board_size     00000000 R  data 
+newline                00000059 R  data 
+predef_tbl             000000CC R  data 
+print_board            00000030 RG text 
+print_predef           00000000 RG text 
+program_banner         0000005B R  data 
