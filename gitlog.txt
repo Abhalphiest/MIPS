@@ -1,0 +1,11 @@
+commit 3b8d9dbe08350e4219e68ecb845541307a9945a0
+Author: Margaret <med7068@rit.edu>
+Date:   Sat Mar 19 11:38:51 2016 -0400
+
+    printing predefined messages implemented, tested calling from main and it works. Makefile updated.
+
+commit 4eaf95502a1aa2f34c50e74725c6879faef5b15c
+Author: Margaret <med7068@rit.edu>
+Date:   Sat Mar 19 11:14:56 2016 -0400
+
+    first commit, adding in rough outlines of files, data, text segments. No real code yet.
