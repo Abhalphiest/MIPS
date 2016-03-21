@@ -1,0 +1,104 @@
+   1 0000               # File:		solve.asm
+   2 0000               # Author:	Margaret Dorsey
+   3 0000               #
+   4 0000               # Description:	solve.asm contains the functions directly involved in the
+   5 0000               #		backtracking algorithm.
+   6 0000               #
+   7 0000               # Revisions:	see gitlog.txt
+   8 0000               #
+   9 0000               
+  10 0000               #
+  11 0000               # CONSTANT DEFINITIONS
+  12 0000               #
+  13 0000               
+  14 0000               
+  15 0000               #
+  16 0000               # DATA BLOCK
+  17 0000               #
+  18 0000               	.data
+  19 0000               	.align 2
+  20 0000               
+  21 0000               
+  22 0000               #
+  23 0000               # FUNCTIONS
+  24 0000               #
+  25 0000               
+  26 0000               	.data
+  27 0000               	.align 2
+  28 0000               	
+  29 0000               	.globl 	step_back
+  30 0000               	.globl	step_forward
+  31 0000               	.globl 	solve
+  32 0000               
+  33 0000               #
+  34 0000               # Name:		solve
+  35 0000               # 
+  36 0000               # Description:	solve is the main loop driving the backtracking algorithm
+  37 0000               #		it calls auxiliary functions and the stack functions until
+  38 0000               #		a solution is found. Square values are changed in this function
+  39 0000               #
+  40 0000               # Arguments:	a0: pointer to board to solve
+  41 0000               #		a1: dimension of the board
+  42 0000               #
+  43 0000               # Returns:	Nothing
+  44 0000               #
+  45 0000               
+  46 0000               solve:
+  47 0000               
+  48 0000               
+  49 0000               
+  50 0000               #
+  51 0000               # Name:		set_next_square
+  52 0000               #
+  53 0000               # Description:	Finds the next blank square in the puzzle and returns its index
+  54 0000               #		or -1 if all the tiles are filled (and thus puzzle is complete)
+  55 0000               #
+  56 0000               # Arguments:	a0: pointer to board to solve
+  57 0000               #		a1: dimension of the board
+  58 0000               #
+  59 0000               # Returns:	index of next blank tile or -1 if puzzle has no more blanks
+  60 0000               #
+  61 0000               
+  62 0000               set_next_square:
+  63 0000               
+  64 0000               
+  65 0000               #
+  66 0000               # Name: 	check_column
+  67 0000               #
+  68 0000               # Description:	Checks the nth column of the board for compliance with the rules
+  69 0000               #		of the puzzle.
+  70 0000               #
+  71 0000               # Arguments:	a0: pointer to board to solve
+  72 0000               #		a1: dimension of the board
+  73 0000               #		a2: index of column to check
+  74 0000               #
+  75 0000               # Returns:	0 on no error in column, 1 on error
+  76 0000               #
+  77 0000               
+  78 0000               check_column:
+  79 0000               
+  80 0000               
+  81 0000               #
+  82 0000               # Name:		check_row
+  83 0000               #
+  84 0000               # Description:	Checks the nth row of the board for compliance with the rules
+  85 0000               #		of the puzzle
+  86 0000               #
+  87 0000               # Arguments:	a0: pointer to board to solve
+  88 0000               #		a1: dimension of the board
+  89 0000               #		a2: index of column to check
+  90 0000               #
+  91 0000               # Returns:	0 on no error in row, 1 on error
+  92 0000               #
+  93 0000               
+  94 0000               check_row:
+  95 0000               
+  96 0000               
+
+
+check_column       00000000 R  data 
+check_row          00000000 R  data 
+set_next_square    00000000 R  data 
+solve              00000000 RG data 
+step_back          ******** XG
+step_forward       ******** XG

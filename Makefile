@@ -16,7 +16,7 @@ RLINK = /home/fac/wrc/bin/rlink
 #
 # Object files
 #
-OBJFILES = three_in_row.obj print.obj
+OBJFILES = three_in_row.obj print.obj solve.obj stepback.obj
 
 #
 # Transformation rule: .asm into .obj

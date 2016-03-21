@@ -1,0 +1,79 @@
+   1 0000               # File: 	stepback.asm
+   2 0000               # Author: 	Margaret Dorsey
+   3 0000               #
+   4 0000               # Description:	Implements a stack structure and uses it to handle stepping 
+   5 0000               # 		back during the backtracking algorithm
+   6 0000               #
+   7 0000               # Revisions: 	see gitlog.txt
+   8 0000               
+   9 0000               #
+  10 0000               # CONSTANT DEFINTIONS
+  11 0000               #
+  12 0000               
+  13 0000               
+  14 0000               #
+  15 0000               # DATA BLOCK
+  16 0000               #
+  17 0000               
+  18 0000               	.data
+  19 0000               	.align 2
+  20 0000               sqr_stack:
+  21 0000 00000000		.space 400	#100 tiles is the maximum amount we'd ever need
+          00000000
+          00000000
+          00000000
+          00000000
+          00000000
+  22 0190               			#stack will store index of tile in main board array
+  23 0190               
+  24 0190               stack_ptr:
+  25 0190 00000000		.word sqr_stack	#keep track of where the top of our stack is
+  26 0194               
+  27 0194               #
+  28 0194               # FUNCTIONS
+  29 0194               #
+  30 0194               	.data
+  31 0194               	.align 2
+  32 0194               	.globl stepback
+  33 0194               
+  34 0194               
+  35 0194               #
+  36 0194               # Name: 	step_back
+  37 0194               #
+  38 0194               # Description:	sets the most recently altered square as blank, and then
+  39 0194               #		steps back to the previous square and returns its index. If
+  40 0194               #		we try to step back past the start of the puzzle, impossible
+  41 0194               #		puzzle is triggered from here.
+  42 0194               #
+  43 0194               # Arguments:	a0: ptr to our board array
+  44 0194               #		a1: dimension of board
+  45 0194               #
+  46 0194               # Returns:	The index of the square we stepped back to in the board 
+  47 0194               #		array.
+  48 0194               #
+  49 0194               
+  50 0194               step_back:
+  51 0194               
+  52 0194               
+  53 0194               	.globl step_forward
+  54 0194               
+  55 0194               #
+  56 0194               # Name: 	step_forward
+  57 0194               #
+  58 0194               # Description: 	pushes the tile we're about to change onto the stack.
+  59 0194               #
+  60 0194               # Arguments: 	a0: ptr to our board
+  61 0194               #		a1: the dimension of the board
+  62 0194               #		a2: the index of the square we're setting in the board array
+  63 0194               #
+  64 0194               # Returns: 	Nothing
+  65 0194               #
+  66 0194               
+  67 0194               step_forward:
+
+
+sqr_stack       00000000 R  data 
+stack_ptr       00000190 R  data 
+step_back       00000194 R  data 
+step_forward    00000194 RG data 
+stepback        ******** XG

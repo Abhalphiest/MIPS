@@ -66,6 +66,23 @@ Module:  print.obj
      print_board_done   Text   R   0x0040021c
             color_tbl   Data   R   0x10000278
 
+Module:  solve.obj
+ Symbols:
+                 Name Section Mode    Value
+      set_next_square   Data   R   0x10000290
+                solve   Data   RG  0x10000290
+         check_column   Data   R   0x10000290
+            check_row   Data   R   0x10000290
+
+Module:  stepback.obj
+ Data segment:  408 bytes, load point 0x10000290
+ Symbols:
+                 Name Section Mode    Value
+         step_forward   Data   RG  0x10000424
+            sqr_stack   Data   R   0x10000290
+            stack_ptr   Data   R   0x10000420
+            step_back   Data   R   0x10000424
+
 Module:  r2k_startup.obj
  Text segment:  36 bytes, load point 0x00400250
  Symbols:
