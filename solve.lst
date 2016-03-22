@@ -23,7 +23,7 @@
   23 0000               # FUNCTIONS
   24 0000               #
   25 0000               
-  26 0000               	.data
+  26 0000               	.text
   27 0000               	.align 2
   28 0000               	
   29 0000               	.globl 	step_back
@@ -76,29 +76,145 @@
   76 0000               #
   77 0000               
   78 0000               check_column:
-  79 0000               
-  80 0000               
-  81 0000               #
-  82 0000               # Name:		check_row
-  83 0000               #
-  84 0000               # Description:	Checks the nth row of the board for compliance with the rules
-  85 0000               #		of the puzzle
-  86 0000               #
-  87 0000               # Arguments:	a0: pointer to board to solve
-  88 0000               #		a1: dimension of the board
-  89 0000               #		a2: index of column to check
-  90 0000               #
-  91 0000               # Returns:	0 on no error in row, 1 on error
-  92 0000               #
-  93 0000               
-  94 0000               check_row:
-  95 0000               
-  96 0000               
+  79 0000               					#no stack for leaf function
+  80 0000               	
+  81 0000 00C42020		add	$a0, $a2, $a0		#set up at our first tile to check
+  82 0004 00A50018		mult	$a1, $a1
+  83 0008 00004012		mflo	$t0			#get nxn or length of array
+  84 000c 00084080		sll	$t0, 2			#multiply by 4 for bytes
+  85 0010 00884020		add	$t0, $a0, $t0		#get end boundary of the array
+  86 0014               
+  87 0014 00004825		or	$t1, $zero, $zero	#set up our black counter
+  88 0018 00005025		or	$t2, $zero, $zero	#set up our white counter
+  89 001c 00005825		or	$t3, $zero, $zero	#set up our consecutive counter
+  90 0020 340CFFFF		ori	$t4, $zero, -1		#set up our previous color for
+  91 0024               					#checking consecutivity
+  92 0024               
+  93 0024 340F0001		ori	$t7, $zero, 1		#for comparison
+  94 0028 34180002		ori	$t8, $zero, 2		
+  95 002c               
+  96 002c               col_loop:
+  97 002c 0088682A		slt	$t5, $a0, $t0		#are we still on the board?
+  98 0030 11A0000E		beq	$t5, $zero, col_loop_done
+  99 0034               	
+ 100 0034 8C8E0000		lw	$t6, 0($a0)		#get our tile
+ 101 0038               
+ 102 0038 11CC0001		beq	$t6, $t4, col_consec	#check for consecutivity
+ 103 003c 00005825		or	$t3, $zero, $zero
+ 104 0040               col_consec:
+ 105 0040 11C00001		beq	$t6, $zero, col_cmp_1	#blank tiles don't count
+ 106 0044 216B0001		addi	$t3, $t3, 1
+ 107 0048               col_cmp_1:
+ 108 0048 15CF0002		bne	$t6, $t7, col_cmp_2	#is it white?
+ 109 004c 21290001		addi	$t1, $t1, 1
+ 110 0050 08000017		j	col_next
+ 111 0054               col_cmp_2:
+ 112 0054 15D80001		bne	$t6, $t8, col_next	#is it black?
+ 113 0058 214A0001		addi	$t2, $t2, 1
+ 114 005c               col_next:
+ 115 005c 296D0003		slti	$t5, $t3, 3		#do we have 3 in a row?
+ 116 0060 11A00008		beq	$t5, $zero, col_return_false
+ 117 0064 00852020		add	$a0, $a0, $a1		#go to same column in next row
+ 118 0068 0800000B		j 	col_loop		#back to top of loop
+ 119 006c               col_loop_done:	
+ 120 006c 292D0004		slti	$t5, $t1, 4		#do we have too many whites?
+ 121 0070 11A00004		beq	$t5, $zero, col_return_false
+ 122 0074               
+ 123 0074 294D0004		slti	$t5, $t2, 4		#too many blacks?
+ 124 0078 11A00002		beq	$t5, $zero, col_return_false
+ 125 007c               	
+ 126 007c 00001025		or	$v0, $zero, $zero	
+ 127 0080 03E00008		jr 	$ra			#return	true
+ 128 0084               col_return_false:
+ 129 0084 34020001		ori	$v0, $zero, 1
+ 130 0088 03E00008		jr	$ra			#return false
+ 131 008c               
+ 132 008c               #
+ 133 008c               # Name:		check_row
+ 134 008c               #
+ 135 008c               # Description:	Checks the nth row of the board for compliance with the rules
+ 136 008c               #		of the puzzle
+ 137 008c               #
+ 138 008c               # Arguments:	a0: pointer to board to solve
+ 139 008c               #		a1: dimension of the board
+ 140 008c               #		a2: index of column to check
+ 141 008c               #
+ 142 008c               # Returns:	0 on no error in row, 1 on error
+ 143 008c               #
+ 144 008c               
+ 145 008c               check_row:
+ 146 008c               
+ 147 008c               					#no stack for leaf function
+ 148 008c 00A60018		mult	$a1, $a2		#get a ptr to the beginning of our row
+ 149 0090 00004012		mflo	$t0
+ 150 0094 00084080		sll	$t0, 2			#bytes
+ 151 0098 01042020		add	$a0, $t0, $a0	
+ 152 009c               	
+ 153 009c 01054020		add	$t0, $t0, $a1		#get boundary of our row
+ 154 00a0               	
+ 155 00a0 00004825		or	$t1, $zero, $zero	#set up our black counter
+ 156 00a4 00005025		or	$t2, $zero, $zero	#set up our white counter
+ 157 00a8 00005825		or	$t3, $zero, $zero	#set up our consecutive counter
+ 158 00ac 340CFFFF		ori	$t4, $zero, -1		#set up our previous color for checking
+ 159 00b0               					#consecutivity
+ 160 00b0               	
+ 161 00b0 340F0001		ori	$t7, $zero, 1		#for comparison
+ 162 00b4 34180002		ori	$t8, $zero, 2
+ 163 00b8               
+ 164 00b8               row_loop:
+ 165 00b8 0088682A		slt	$t5, $a0, $t0		#are we still in our row?
+ 166 00bc 11A0000E		beq	$t5, $zero, row_loop_done
+ 167 00c0               
+ 168 00c0 8C8E0000		lw	$t6, 0($a0)		#get our tile
+ 169 00c4               	
+ 170 00c4 11C00001		beq	$t6, $zero, row_consec	#check consecutivity
+ 171 00c8 00005825		or	$t3, $zero, $zero
+ 172 00cc               row_consec:
+ 173 00cc 11C00001		beq	$t6,$zero, row_cmp_1	#blank tiles don't count
+ 174 00d0 216B0001		addi	$t3, $t3, 1
+ 175 00d4               row_cmp_1:
+ 176 00d4 15CF0002		bne	$t6, $t7, row_cmp_2	#is it white?
+ 177 00d8 21290001		addi	$t1, $t1, 1
+ 178 00dc 0800003A		j	row_next
+ 179 00e0               row_cmp_2:
+ 180 00e0 15D80001		bne	$t6, $t8, row_next	#is it black?
+ 181 00e4 214A0001		addi	$t2, $t2, 1
+ 182 00e8               row_next:
+ 183 00e8 296D0003		slti	$t5, $t3, 3		#do we have 3 in a row?
+ 184 00ec 11A00008		beq	$t5, $zero, row_return_false
+ 185 00f0 20840004		add	$a0, $a0, 4		#next element in row
+ 186 00f4 0800002E		j	row_loop
+ 187 00f8               row_loop_done:
+ 188 00f8 292D0004		slti	$t5, $t1, 4		#too many whites?
+ 189 00fc 11A00004		beq	$t5, $zero, row_return_false
+ 190 0100               	
+ 191 0100 294D0004		slti	$t5, $t2, 4		#too many blacks?
+ 192 0104 11A00002		beq	$t5, $zero, row_return_false
+ 193 0108               
+ 194 0108 00001025		or	$v0, $zero, $zero
+ 195 010c 03E00008		jr	$ra			#return true
+ 196 0110               row_return_false:
+ 197 0110 34020001		ori	$v0, $zero, 1
+ 198 0114 03E00008		jr	$ra			#return false
 
 
-check_column       00000000 R  data 
-check_row          00000000 R  data 
-set_next_square    00000000 R  data 
-solve              00000000 RG data 
-step_back          ******** XG
-step_forward       ******** XG
+check_column        00000000 R  text 
+check_row           0000008C R  text 
+col_cmp_1           00000048 R  text 
+col_cmp_2           00000054 R  text 
+col_consec          00000040 R  text 
+col_loop            0000002C R  text 
+col_loop_done       0000006C R  text 
+col_next            0000005C R  text 
+col_return_false    00000084 R  text 
+row_cmp_1           000000D4 R  text 
+row_cmp_2           000000E0 R  text 
+row_consec          000000CC R  text 
+row_loop            000000B8 R  text 
+row_loop_done       000000F8 R  text 
+row_next            000000E8 R  text 
+row_return_false    00000110 R  text 
+set_next_square     00000000 R  text 
+solve               00000000 RG text 
+step_back           ******** XG
+step_forward        ******** XG

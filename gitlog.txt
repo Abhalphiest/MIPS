@@ -1,3 +1,9 @@
+commit 01e58dd28bb453bdbf0fb4e439512080e4db5e6f
+Author: Margaret <med7068@rit.edu>
+Date:   Mon Mar 21 00:06:40 2016 -0400
+
+    solve.asm and stepback.asm are stubbed out, makefile updated, implementation will begin as soon as possible.
+
 commit 30e3ee80d816eff92008b1e925661e06388627d6
 Author: Margaret <med7068@rit.edu>
 Date:   Sat Mar 19 18:59:57 2016 -0400

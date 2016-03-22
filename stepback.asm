@@ -27,7 +27,7 @@ stack_ptr:
 #
 # FUNCTIONS
 #
-	.data
+	.text
 	.align 2
 	.globl stepback
 
