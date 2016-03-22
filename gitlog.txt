@@ -1,3 +1,9 @@
+commit fc031a3993ade8fb0d1a4dfc4f7cb624e0d7e518
+Author: Margaret <med7068@rit.edu>
+Date:   Tue Mar 22 15:49:11 2016 -0400
+
+    implemented just enough of solve function to test the function for finding the next blank tile.
+
 commit dbbcd2ba6f90e2d7cae000f1d474855863cc7c9c
 Author: Margaret <med7068@rit.edu>
 Date:   Tue Mar 22 14:45:08 2016 -0400

@@ -32,6 +32,7 @@ NEWLINE	=		6
 	.globl main		#entry point for program
 	.globl print_predef	#for printing
 	.globl print_board
+	.globl solve
 
 	.data
 	.align 2
@@ -97,21 +98,34 @@ board_loop:
 	addi	$a0, $a0, 4		#integer is a byte
 	j	board_loop		#back to top
 board_loop_done:
+
+
+
+
 	ori	$a0, $zero, PROGRAM_BANNER	#print our banner
 	jal	print_predef
+
+
 	ori	$a0, $zero, INITIAL_PUZZLE	#print header
 	jal	print_predef
-	# print board
+					# print board
 	la	$a0, board_arr
 	or	$a1, $s0, $zero		#load args for board printing
 	jal	print_board
 	
-	#solve
+	la	$a0, board_arr		#solve
+	or	$a1, $s1, $zero
+	jal	solve
 
-	#solution over
-	
+						
+					#solution is over, so output
 	ori	$a0, $zero, FINAL_PUZZLE
-	#print board
+	jal	print_predef		
+
+	la 	$a0, board_arr
+	or	$a1, $s0, $zero
+	jal	print_board
+
 main_done:
 	lw	$s2, 12($sp)
 	lw	$s1, 8($sp)
