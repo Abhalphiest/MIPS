@@ -1,3 +1,9 @@
+commit dbbcd2ba6f90e2d7cae000f1d474855863cc7c9c
+Author: Margaret <med7068@rit.edu>
+Date:   Tue Mar 22 14:45:08 2016 -0400
+
+    finding next blank tile is implemented, assembles, still cant test until I add something to the solve function, which is probably the next order of business
+
 commit cc222f184c6e8d7f3072e344bca1dacf6f9bc7d2
 Author: Margaret <med7068@rit.edu>
 Date:   Tue Mar 22 14:30:15 2016 -0400

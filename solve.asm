@@ -44,9 +44,35 @@
 #
 
 solve:
+	addi	$sp, $sp, -16
+	sw	$ra, 0($sp)
+	sw	$s0, 4($sp)
+	sw	$s1, 8($sp)
+	sw	$s2, 12($sp)
 
+	or	$s0, $a0, $zero	#keep our args
+	or	$s1, $a1, $zero
+	
+	ori	$t4, $zero, 1	#for comparisons and setting
+	ori	$t5, $zero, 2	
 
+	jal	set_next_square	#get our next square
+solve_loop:
+	beq	$v0, $zero, solve_done
+	or	$s2, $v0, $zero	#store our new tile
+	
+	sw	$t4, 0($s2)	#make it white	
 
+	or	$a0, $s0, $zero	#set up our args
+	or	$a1, $s1, $zero	
+	jal	set_next_square	#get our next tile
+	j	solve_loop
+solve_done:
+	lw 	$ra, 0($sp)	#restore stack and return
+	lw	$s0, 4($sp)
+	lw	$s2, 8($sp)
+	addi	$sp, $sp, 16
+	jr	$ra		
 #
 # Name:		set_next_square
 #
