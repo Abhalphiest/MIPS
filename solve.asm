@@ -11,12 +11,17 @@
 # CONSTANT DEFINITIONS
 #
 
+#syscall
+EXIT =			10
+
+#for printing
+IMPOSSIBLE_PUZZLE = 	2
 
 #
 # DATA BLOCK
 #
 	.data
-	.align 2
+	.align 	2
 
 
 #
@@ -24,12 +29,12 @@
 #
 
 	.text
-	.align 2
+	.align 	2
 	
 	.globl 	step_back
 	.globl	step_forward
 	.globl 	solve
-
+	.globl	print_predef
 #
 # Name:		solve
 # 
@@ -44,24 +49,60 @@
 #
 
 solve:
-	addi	$sp, $sp, -16
+	addi	$sp, $sp, -24
 	sw	$ra, 0($sp)
 	sw	$s0, 4($sp)
 	sw	$s1, 8($sp)
 	sw	$s2, 12($sp)
+	sw	$s3, 16($sp)
+	sw	$s4, 20($sp)
 
 	or	$s0, $a0, $zero	#keep our args
 	or	$s1, $a1, $zero
 	
-	ori	$t4, $zero, 1	#for comparisons and setting
-	ori	$t5, $zero, 2	
-
+	ori	$s3, $zero, 1	#for comparisons and setting
+	ori	$s4, $zero, 2	
+	
+	jal	check_board	#see if we even started correct
+	beq	$v0, $zero, init_valid
+	ori	$a0, $zero, IMPOSSIBLE_PUZZLE
+	or	$v0, $zero, $zero
+	syscall			#force exit
+	jal	print_predef
+init_valid:
+	or	$a0, $s0, $zero
+	or	$a0, $s0, $zero
 	jal	set_next_square	#get our next square
 solve_loop:
 	beq	$v0, $zero, solve_done
 	or	$s2, $v0, $zero	#store our new tile
 	
-	sw	$t4, 0($s2)	#make it white	
+	lw	$t6, 0($s2)
+	beq	$t6, $s3, set_black
+	beq	$t6, $s4, solve_step_back
+	sw	$s3, 0($s2)	#make it white
+	
+	or	$a0, $s0, $zero #check the board for correctness
+	or	$a1, $s1, $zero	
+	jal	check_board	#will be 0 if correct
+	beq	$v0, $zero, new_correct
+set_black:
+	sw	$s4, 0($s2)	#try black instead
+	or	$a0, $s0, $zero	#check for correctness
+	or	$a1, $s1, $zero
+	jal	check_board
+	beq	$v0, $zero, new_correct
+solve_step_back:
+	sw	$zero, 0($s2)	#set to blank and step back
+	or	$a0, $s0, $zero
+	or	$a1, $s1, $zero
+	jal	step_back
+	j solve_loop
+new_correct:
+	or	$a0, $s0, $zero	#we changed a tile
+	or	$a1, $s1, $zero
+	or	$a2, $s2, $zero
+	jal	step_forward
 
 	or	$a0, $s0, $zero	#set up our args
 	or	$a1, $s1, $zero	
@@ -70,8 +111,11 @@ solve_loop:
 solve_done:
 	lw 	$ra, 0($sp)	#restore stack and return
 	lw	$s0, 4($sp)
-	lw	$s2, 8($sp)
-	addi	$sp, $sp, 16
+	lw	$s1, 8($sp)
+	lw	$s2, 12($sp)
+	lw	$s3, 16($sp)
+	lw	$s4, 20($sp)
+	addi	$sp, $sp, 24
 	jr	$ra		
 #
 # Name:		set_next_square
@@ -107,6 +151,73 @@ non_zero:
 	j	next_square_loop
 next_loop_done:
 	jr	$ra			#return 0, puzzle done
+
+
+
+
+
+#
+# Name:		check_board
+#
+# Description:	Uses check_column and check row to check the board for
+#		correctness, to keep the solve function a little cleaner.
+#
+# Arguments	a0: pointer to board to check
+#		a1: dimension of the board
+#
+# Returns:	0 on correct board, 1 on error
+#
+
+check_board:
+	addi	$sp, $sp, -12		#set up our stack
+	sw	$ra, 0($sp)
+	sw	$s0, 4($sp)
+	sw	$s1, 8($sp)
+
+	or	$s0, $a0, $zero		#store our args
+	or	$s1, $a1, $zero
+
+	or	$t0, $zero, $zero	#loop control
+
+check_board_loop:
+	slt	$t1, $t0, $s1		#loop through our whole dimension
+	beq	$t1, $zero, check_board_done
+
+	or	$a0, $s0, $zero		#set up args for row check
+	or	$a1, $s1, $zero
+	or	$a2, $t0, $zero
+
+	jal	check_row		#returns 0 for correct
+
+	bne	$v0, $zero, check_board_false 
+	
+	or	$a0, $s0, $zero		#set up args for column check
+	or	$a1, $s1, $zero
+	or	$a2, $t0, $zero
+
+	jal check_column		#returns zero for correct
+	
+	bne	$v0, $zero, check_board_false
+
+	addi	$t0, $t0, 1		#increment loop counter
+	j	check_board_loop	#back to top
+
+check_board_done:
+	or	$v0, $zero, $zero
+	lw	$ra, 0($sp)
+	lw	$s0, 4($sp)
+	lw	$s1, 8($sp)
+	addi	$sp, $sp, 12
+	jr	$ra			#return true
+
+check_board_false:
+	ori	$v0, $zero, 1
+	lw	$ra, 0($sp)
+	lw	$s0, 4($sp)
+	lw	$s1, 8($sp)
+	addi	$sp, $sp, 12
+	jr	$ra			#return false
+
 #
 # Name: 	check_column
 #

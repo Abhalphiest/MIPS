@@ -1,3 +1,9 @@
+commit a257294d806bc865bcb44d7dd575e05dd8296679
+Author: Margaret <med7068@rit.edu>
+Date:   Tue Mar 22 15:58:00 2016 -0400
+
+    finding next tile seems to work as expected, main is now finished, just need to implement stepping forward and back and test column and row and checking, then I can finish up the solve function
+
 commit fc031a3993ade8fb0d1a4dfc4f7cb624e0d7e518
 Author: Margaret <med7068@rit.edu>
 Date:   Tue Mar 22 15:49:11 2016 -0400

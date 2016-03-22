@@ -24,7 +24,7 @@
           00000000
           00000000
           00000000
-  22 0190               			#stack will store index of tile in main board array
+  22 0190               			#stack will store address of tile in board array
   23 0190               
   24 0190               stack_ptr:
   25 0190 00000000		.word sqr_stack	#keep track of where the top of our stack is
@@ -40,15 +40,15 @@
   35 0000               #
   36 0000               # Name: 	step_back
   37 0000               #
-  38 0000               # Description:	sets the most recently altered square as blank, and then
-  39 0000               #		steps back to the previous square and returns its index. If
-  40 0000               #		we try to step back past the start of the puzzle, impossible
-  41 0000               #		puzzle is triggered from here.
+  38 0000               # Description:	Pops the most recently changed tile off the top of the
+  39 0000               #		stack and returns its address.
+  40 0000               #		If we try to step back past the start of the puzzle, 
+  41 0000               #		impossible puzzle is triggered from here.
   42 0000               #
   43 0000               # Arguments:	a0: ptr to our board array
   44 0000               #		a1: dimension of board
   45 0000               #
-  46 0000               # Returns:	The index of the square we stepped back to in the board 
+  46 0000               # Returns:	The address of the square we stepped back to in the board 
   47 0000               #		array.
   48 0000               #
   49 0000               
@@ -64,7 +64,7 @@
   59 0000               #
   60 0000               # Arguments: 	a0: ptr to our board
   61 0000               #		a1: the dimension of the board
-  62 0000               #		a2: the index of the square we're setting in the board array
+  62 0000               #		a2: the address of the square we're setting in the board array
   63 0000               #
   64 0000               # Returns: 	Nothing
   65 0000               #
