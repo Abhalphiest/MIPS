@@ -51,17 +51,36 @@ solve:
 # Name:		set_next_square
 #
 # Description:	Finds the next blank square in the puzzle and returns its index
-#		or -1 if all the tiles are filled (and thus puzzle is complete)
+#		or 0 if all the tiles are filled (and thus puzzle is complete)
 #
 # Arguments:	a0: pointer to board to solve
 #		a1: dimension of the board
 #
-# Returns:	index of next blank tile or -1 if puzzle has no more blanks
+# Returns:	address of next blank tile or -1 if puzzle has no more blanks
 #
 
 set_next_square:
+					#no stack for leaf function
 
-
+	mult	$a1, $a1		#get the boundary addr for end of array
+	mflo	$t0
+	sll	$t0, 2
+	add	$t0, $a0, $t0
+	
+	or	$v0, $zero, $zero	#null ptr until we find one
+next_square_loop:
+	slt	$t1, $a0, $t0		#less than boundary of array
+	beq	$t1, $zero, next_loop_done
+	
+	lw	$t2, 0($a0)		#get our tile
+	bne	$t2, $zero, non_zero	#is it blank?
+	or	$v0, $zero, $a0		#return our address
+	jr	$ra				
+non_zero:
+	add	$a0, $a0, 4		#next word in array
+	j	next_square_loop
+next_loop_done:
+	jr	$ra			#return 0, puzzle done
 #
 # Name: 	check_column
 #
@@ -81,8 +100,9 @@ check_column:
 	add	$a0, $a2, $a0		#set up at our first tile to check
 	mult	$a1, $a1
 	mflo	$t0			#get nxn or length of array
-	sll	$t0, 2			#multiply by 4 for bytes
+	sll	$t0, 2			#multiply by 4 for word
 	add	$t0, $a0, $t0		#get end boundary of the array
+	sll	$a1, 2			#for incrementing earlier need words
 
 	or	$t1, $zero, $zero	#set up our black counter
 	or	$t2, $zero, $zero	#set up our white counter

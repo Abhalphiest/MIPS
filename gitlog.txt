@@ -1,3 +1,9 @@
+commit cc222f184c6e8d7f3072e344bca1dacf6f9bc7d2
+Author: Margaret <med7068@rit.edu>
+Date:   Tue Mar 22 14:30:15 2016 -0400
+
+    column and row checking implemented and they compile, but its not possible to test them yet without a little more machinery
+
 commit 01e58dd28bb453bdbf0fb4e439512080e4db5e6f
 Author: Margaret <med7068@rit.edu>
 Date:   Mon Mar 21 00:06:40 2016 -0400
