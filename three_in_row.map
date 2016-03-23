@@ -67,59 +67,59 @@ Module:  print.obj
             color_tbl   Data   R   0x10000278
 
 Module:  solve.obj
- Text segment:  748 bytes, load point 0x00400274
+ Text segment:  736 bytes, load point 0x00400274
  Symbols:
                  Name Section Mode    Value
             set_black   Text   R   0x004002f0
-           col_consec   Text   R   0x00400468
-      set_next_square   Text   R   0x00400358
-           solve_done   Text   R   0x00400338
-    check_board_false   Text   R   0x00400404
-           row_consec   Text   R   0x00400508
-     check_board_done   Text   R   0x004003e8
-     next_square_loop   Text   R   0x0040036c
-          check_board   Text   R   0x00400390
+           col_consec   Text   R   0x0040045c
+      set_next_square   Text   R   0x0040034c
+           solve_done   Text   R   0x0040032c
+    check_board_false   Text   R   0x004003f8
+           row_consec   Text   R   0x004004fc
+     check_board_done   Text   R   0x004003dc
+     next_square_loop   Text   R   0x00400360
+          check_board   Text   R   0x00400384
                 solve   Text   RG  0x00400274
-             row_loop   Text   R   0x004004f4
-       next_loop_done   Text   R   0x0040038c
-          new_correct   Text   R   0x00400318
-     col_return_false   Text   R   0x004004b8
-             col_loop   Text   R   0x00400454
+             row_loop   Text   R   0x004004e8
+       next_loop_done   Text   R   0x00400380
+          new_correct   Text   R   0x00400314
+     col_return_false   Text   R   0x004004ac
+             col_loop   Text   R   0x00400448
            init_valid   Text   R   0x004002bc
-            col_cmp_1   Text   R   0x00400470
-            col_cmp_2   Text   R   0x00400480
+            col_cmp_1   Text   R   0x00400464
+            col_cmp_2   Text   R   0x00400474
       solve_step_back   Text   R   0x00400304
-        row_loop_done   Text   R   0x00400538
-             row_next   Text   R   0x00400528
-            row_cmp_1   Text   R   0x00400510
-            row_cmp_2   Text   R   0x00400520
-         check_column   Text   R   0x00400420
+        row_loop_done   Text   R   0x0040052c
+             row_next   Text   R   0x0040051c
+            row_cmp_1   Text   R   0x00400504
+            row_cmp_2   Text   R   0x00400514
+         check_column   Text   R   0x00400414
            solve_loop   Text   R   0x004002c8
-            check_row   Text   R   0x004004c0
-     row_return_false   Text   R   0x00400558
+            check_row   Text   R   0x004004b4
+     row_return_false   Text   R   0x0040054c
     IMPOSSIBLE_PUZZLE          A   0x00000002
-             col_next   Text   R   0x00400488
+             col_next   Text   R   0x0040047c
                  EXIT          A   0x0000000a
-     check_board_loop   Text   R   0x004003b0
-        col_loop_done   Text   R   0x00400498
-             non_zero   Text   R   0x00400384
+     check_board_loop   Text   R   0x004003a4
+        col_loop_done   Text   R   0x0040048c
+             non_zero   Text   R   0x00400378
 
 Module:  stepback.obj
- Text segment:  88 bytes, load point 0x00400560
+ Text segment:  88 bytes, load point 0x00400554
  Data segment:  408 bytes, load point 0x10000290
  Symbols:
                  Name Section Mode    Value
-                sb_ok   Text   R   0x00400588
-         step_forward   Text   RG  0x0040059c
+                sb_ok   Text   R   0x0040057c
+         step_forward   Text   RG  0x00400590
             sqr_stack   Data   R   0x10000290
             stack_ptr   Data   R   0x10000420
-            step_back   Text   R   0x00400560
+            step_back   Text   R   0x00400554
     IMPOSSIBLE_PUZZLE          A   0x00000002
                  EXIT          A   0x0000000a
 
 Module:  r2k_startup.obj
- Text segment:  36 bytes, load point 0x004005b8
+ Text segment:  36 bytes, load point 0x004005ac
  Symbols:
                  Name Section Mode    Value
             SYS_EXIT2          A   0x00000011
-       __r2k__entry__   Text   RG  0x004005bc
+       __r2k__entry__   Text   RG  0x004005b0

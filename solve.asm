@@ -95,14 +95,11 @@ set_black:
 	beq	$v0, $zero, new_correct
 solve_step_back:
 	sw	$zero, 0($s2)	#set to blank and step back
-	or	$a0, $s0, $zero
-	or	$a1, $s1, $zero
+	or	$a0, $s2, $zero
 	jal	step_back
 	j solve_loop
 new_correct:
-	or	$a0, $s0, $zero	#we changed a tile
-	or	$a1, $s1, $zero
-	or	$a2, $s2, $zero
+	or	$a0, $s2, $zero	#we changed a tile
 	jal	step_forward
 
 	or	$a0, $s0, $zero	#set up our args
