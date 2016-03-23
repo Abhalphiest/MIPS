@@ -1,3 +1,27 @@
+commit 8c7f1523ecb75be28aec4cc6d715e5f58504d72a
+Author: Margaret <med7068@rit.edu>
+Date:   Wed Mar 23 11:51:08 2016 -0400
+
+    solving now seems to work, needs more testing for sure. but yay!
+
+commit 1706548faaa12e468ac5038c17b868430bc41b9c
+Author: Margaret <med7068@rit.edu>
+Date:   Wed Mar 23 11:02:20 2016 -0400
+
+    found a bug but it didnt fix the problem
+
+commit 048edd37669a8b1700bfd12f782d458e9b926621
+Author: Margaret <med7068@rit.edu>
+Date:   Wed Mar 23 10:17:11 2016 -0400
+
+    started testing, solving does not seem to work but it didnt break, just called something impossible when it isnt. more testing to come later, taking a break for now.
+
+commit 7c02b5a60d135bcaea041ad4127c12b667458684
+Author: Margaret <med7068@rit.edu>
+Date:   Wed Mar 23 10:07:41 2016 -0400
+
+    stepping forward and back is implemented but not at all tested. it assembles
+
 commit ae309e23a423689b7cc6d4e308290bd8f7781aed
 Author: Margaret <med7068@rit.edu>
 Date:   Wed Mar 23 09:52:22 2016 -0400

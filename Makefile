@@ -35,3 +35,6 @@ OBJFILES = three_in_row.obj print.obj solve.obj stepback.obj
 #
 three_in_row.out:	$(OBJFILES)
 	$(RLINK) -m -o $*.out $(OBJFILES) > $*.map
+
+clean:
+	$(RM)	$(OBJFILES) three_in_row.out three_in_row.map three_in_row.lst
