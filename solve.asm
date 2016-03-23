@@ -66,48 +66,49 @@ solve:
 	jal	check_board	#see if we even started correct
 	beq	$v0, $zero, init_valid
 	ori	$a0, $zero, IMPOSSIBLE_PUZZLE
-	or	$v0, $zero, $zero
+	jal	print_predef
+	ori	$v0, $zero, EXIT
 	syscall			#force exit
 	jal	print_predef
 init_valid:
 	or	$a0, $s0, $zero
-	or	$a0, $s0, $zero
+	or	$a1, $s1, $zero
 	jal	set_next_square	#get our next square
-solve_loop:
-	beq	$v0, $zero, solve_done
-	or	$s2, $v0, $zero	#store our new tile
-	
-	lw	$t6, 0($s2)
-	beq	$t6, $s3, set_black
-	beq	$t6, $s4, solve_step_back
-	sw	$s3, 0($s2)	#make it white
-	
-	or	$a0, $s0, $zero #check the board for correctness
-	or	$a1, $s1, $zero	
-	jal	check_board	#will be 0 if correct
-	beq	$v0, $zero, new_correct
-set_black:
-	sw	$s4, 0($s2)	#try black instead
-	or	$a0, $s0, $zero	#check for correctness
-	or	$a1, $s1, $zero
-	jal	check_board
-	beq	$v0, $zero, new_correct
-solve_step_back:
-	sw	$zero, 0($s2)	#set to blank and step back
-	or	$a0, $s0, $zero
-	or	$a1, $s1, $zero
-	jal	step_back
-	j solve_loop
-new_correct:
-	or	$a0, $s0, $zero	#we changed a tile
-	or	$a1, $s1, $zero
-	or	$a2, $s2, $zero
-	jal	step_forward
-
-	or	$a0, $s0, $zero	#set up our args
-	or	$a1, $s1, $zero	
-	jal	set_next_square	#get our next tile
-	j	solve_loop
+#solve_loop:
+#	beq	$v0, $zero, solve_done
+#	or	$s2, $v0, $zero	#store our new tile
+#	
+#	lw	$t6, 0($s2)
+#	beq	$t6, $s3, set_black
+#	beq	$t6, $s4, solve_step_back
+#	sw	$s3, 0($s2)	#make it white
+#	
+#	or	$a0, $s0, $zero #check the board for correctness
+#	or	$a1, $s1, $zero	
+#	jal	check_board	#will be 0 if correct
+#	beq	$v0, $zero, new_correct
+#set_black:
+#	sw	$s4, 0($s2)	#try black instead
+#	or	$a0, $s0, $zero	#check for correctness
+#	or	$a1, $s1, $zero
+#	jal	check_board
+#	beq	$v0, $zero, new_correct
+#solve_step_back:
+#	sw	$zero, 0($s2)	#set to blank and step back
+#	or	$a0, $s0, $zero
+#	or	$a1, $s1, $zero
+#	jal	step_back
+#	j solve_loop
+#new_correct:
+#	or	$a0, $s0, $zero	#we changed a tile
+#	or	$a1, $s1, $zero
+#	or	$a2, $s2, $zero
+#	jal	step_forward
+#
+#	or	$a0, $s0, $zero	#set up our args
+#	or	$a1, $s1, $zero	
+#	jal	set_next_square	#get our next tile
+#	j	solve_loop
 solve_done:
 	lw 	$ra, 0($sp)	#restore stack and return
 	lw	$s0, 4($sp)
@@ -126,7 +127,7 @@ solve_done:
 # Arguments:	a0: pointer to board to solve
 #		a1: dimension of the board
 #
-# Returns:	address of next blank tile or -1 if puzzle has no more blanks
+# Returns:	address of next blank tile or 0  if puzzle has no more blanks
 #
 
 set_next_square:
@@ -169,23 +170,24 @@ next_loop_done:
 #
 
 check_board:
-	addi	$sp, $sp, -12		#set up our stack
+	addi	$sp, $sp, -16		#set up our stack
 	sw	$ra, 0($sp)
 	sw	$s0, 4($sp)
 	sw	$s1, 8($sp)
+	sw	$s2, 12($sp)
 
 	or	$s0, $a0, $zero		#store our args
 	or	$s1, $a1, $zero
 
-	or	$t0, $zero, $zero	#loop control
+	or	$s2, $zero, $zero	#loop control
 
 check_board_loop:
-	slt	$t1, $t0, $s1		#loop through our whole dimension
+	slt	$t1, $s2, $s1		#loop through our whole dimension
 	beq	$t1, $zero, check_board_done
 
 	or	$a0, $s0, $zero		#set up args for row check
 	or	$a1, $s1, $zero
-	or	$a2, $t0, $zero
+	or	$a2, $s2, $zero
 
 	jal	check_row		#returns 0 for correct
 
@@ -193,13 +195,13 @@ check_board_loop:
 	
 	or	$a0, $s0, $zero		#set up args for column check
 	or	$a1, $s1, $zero
-	or	$a2, $t0, $zero
+	or	$a2, $s2, $zero
 
-	jal check_column		#returns zero for correct
+	jal 	check_column		#returns zero for correct
 	
 	bne	$v0, $zero, check_board_false
 
-	addi	$t0, $t0, 1		#increment loop counter
+	addi	$s2, $s2, 1		#increment loop counter
 	j	check_board_loop	#back to top
 
 check_board_done:
@@ -207,7 +209,8 @@ check_board_done:
 	lw	$ra, 0($sp)
 	lw	$s0, 4($sp)
 	lw	$s1, 8($sp)
-	addi	$sp, $sp, 12
+	lw	$s2, 12($sp)
+	addi	$sp, $sp, 16
 	jr	$ra			#return true
 
 check_board_false:
@@ -215,7 +218,8 @@ check_board_false:
 	lw	$ra, 0($sp)
 	lw	$s0, 4($sp)
 	lw	$s1, 8($sp)
-	addi	$sp, $sp, 12
+	lw	$s2, 12($sp)
+	addi	$sp, $sp, 16
 	jr	$ra			#return false
 
 #
@@ -233,13 +237,13 @@ check_board_false:
 
 check_column:
 					#no stack for leaf function
-	
-	add	$a0, $a2, $a0		#set up at our first tile to check
+	sll	$a2, 2			#get words	
 	mult	$a1, $a1
 	mflo	$t0			#get nxn or length of array
 	sll	$t0, 2			#multiply by 4 for word
 	add	$t0, $a0, $t0		#get end boundary of the array
-	sll	$a1, 2			#for incrementing earlier need words
+	sll	$a1, 2			#for incrementing later  need words
+	add	$a0, $a2, $a0		#set up at first column tile
 
 	or	$t1, $zero, $zero	#set up our black counter
 	or	$t2, $zero, $zero	#set up our white counter
@@ -262,6 +266,7 @@ col_consec:
 	beq	$t6, $zero, col_cmp_1	#blank tiles don't count
 	addi	$t3, $t3, 1
 col_cmp_1:
+	or	$t4, $t6, $zero		#update our last used color
 	bne	$t6, $t7, col_cmp_2	#is it white?
 	addi	$t1, $t1, 1
 	j	col_next
@@ -273,11 +278,13 @@ col_next:
 	beq	$t5, $zero, col_return_false
 	add	$a0, $a0, $a1		#go to same column in next row
 	j 	col_loop		#back to top of loop
-col_loop_done:	
-	slti	$t5, $t1, 4		#do we have too many whites?
+col_loop_done:
+	srl	$a1, 3			#to get dimension/2
+	addi	$a1, $a1, 1	
+	slt	$t5, $t1, $a1		#do we have too many whites?
 	beq	$t5, $zero, col_return_false
 
-	slti	$t5, $t2, 4		#too many blacks?
+	slt	$t5, $t2, $a1		#too many blacks?
 	beq	$t5, $zero, col_return_false
 	
 	or	$v0, $zero, $zero	
@@ -306,13 +313,14 @@ check_row:
 	mflo	$t0
 	sll	$t0, 2			#bytes
 	add	$a0, $t0, $a0	
-	
-	add	$t0, $t0, $a1		#get boundary of our row
+	or	$t1, $a1, $zero
+	sll	$t1, 2
+	add	$t0, $a0, $t1		#get boundary of our row
 	
 	or	$t1, $zero, $zero	#set up our black counter
 	or	$t2, $zero, $zero	#set up our white counter
 	or	$t3, $zero, $zero	#set up our consecutive counter
-	ori	$t4, $zero, -1		#set up our previous color for checking
+	or	$t4, $zero, $zero	#set up our previous color for checking
 					#consecutivity
 	
 	ori	$t7, $zero, 1		#for comparison
@@ -324,12 +332,13 @@ row_loop:
 
 	lw	$t6, 0($a0)		#get our tile
 	
-	beq	$t6, $zero, row_consec	#check consecutivity
+	beq	$t6, $t4, row_consec	#check consecutivity
 	or	$t3, $zero, $zero
 row_consec:
 	beq	$t6,$zero, row_cmp_1	#blank tiles don't count
 	addi	$t3, $t3, 1
 row_cmp_1:
+	or	$t4, $t6, $zero		#update our last color
 	bne	$t6, $t7, row_cmp_2	#is it white?
 	addi	$t1, $t1, 1
 	j	row_next
@@ -342,10 +351,12 @@ row_next:
 	add	$a0, $a0, 4		#next element in row
 	j	row_loop
 row_loop_done:
-	slti	$t5, $t1, 4		#too many whites?
+	srl	$a1, 1			#to get dimension/2
+	addi	$a1, $a1, 1
+	slt	$t5, $t1, $a1		#too many whites?
 	beq	$t5, $zero, row_return_false
 	
-	slti	$t5, $t2, 4		#too many blacks?
+	slt	$t5, $t2, $a1		#too many blacks?
 	beq	$t5, $zero, row_return_false
 
 	or	$v0, $zero, $zero
@@ -353,3 +364,4 @@ row_loop_done:
 row_return_false:
 	ori	$v0, $zero, 1
 	jr	$ra			#return false
+

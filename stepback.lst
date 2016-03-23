@@ -53,27 +53,29 @@
   48 0000               #
   49 0000               
   50 0000               step_back:
-  51 0000               
-  52 0000               
-  53 0000               	.globl step_forward
-  54 0000               
-  55 0000               #
-  56 0000               # Name: 	step_forward
-  57 0000               #
-  58 0000               # Description: 	pushes the tile we're about to change onto the stack.
-  59 0000               #
-  60 0000               # Arguments: 	a0: ptr to our board
-  61 0000               #		a1: the dimension of the board
-  62 0000               #		a2: the address of the square we're setting in the board array
-  63 0000               #
-  64 0000               # Returns: 	Nothing
-  65 0000               #
-  66 0000               
-  67 0000               step_forward:
+  51 0000               	
+  52 0000 03E00008		jr	$ra
+  53 0004               	.globl step_forward
+  54 0004               
+  55 0004               #
+  56 0004               # Name: 	step_forward
+  57 0004               #
+  58 0004               # Description: 	pushes the tile we're about to change onto the stack.
+  59 0004               #
+  60 0004               # Arguments: 	a0: ptr to our board
+  61 0004               #		a1: the dimension of the board
+  62 0004               #		a2: the address of the square we're setting in the board array
+  63 0004               #
+  64 0004               # Returns: 	Nothing
+  65 0004               #
+  66 0004               
+  67 0004               step_forward:
+  68 0004               
+  69 0004 03E00008		jr	$ra
 
 
 sqr_stack       00000000 R  data 
 stack_ptr       00000190 R  data 
 step_back       00000000 R  text 
-step_forward    00000000 RG text 
+step_forward    00000004 RG text 
 stepback        ******** XG

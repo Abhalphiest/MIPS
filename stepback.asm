@@ -48,8 +48,8 @@ stack_ptr:
 #
 
 step_back:
-
-
+	
+	jr	$ra
 	.globl step_forward
 
 #
@@ -65,3 +65,5 @@ step_back:
 #
 
 step_forward:
+
+	jr	$ra

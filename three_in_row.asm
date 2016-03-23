@@ -114,7 +114,7 @@ board_loop_done:
 	jal	print_board
 	
 	la	$a0, board_arr		#solve
-	or	$a1, $s1, $zero
+	or	$a1, $s0, $zero
 	jal	solve
 
 						
