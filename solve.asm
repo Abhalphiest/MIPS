@@ -74,41 +74,41 @@ init_valid:
 	or	$a0, $s0, $zero
 	or	$a1, $s1, $zero
 	jal	set_next_square	#get our next square
-#solve_loop:
-#	beq	$v0, $zero, solve_done
-#	or	$s2, $v0, $zero	#store our new tile
-#	
-#	lw	$t6, 0($s2)
-#	beq	$t6, $s3, set_black
-#	beq	$t6, $s4, solve_step_back
-#	sw	$s3, 0($s2)	#make it white
-#	
-#	or	$a0, $s0, $zero #check the board for correctness
-#	or	$a1, $s1, $zero	
-#	jal	check_board	#will be 0 if correct
-#	beq	$v0, $zero, new_correct
-#set_black:
-#	sw	$s4, 0($s2)	#try black instead
-#	or	$a0, $s0, $zero	#check for correctness
-#	or	$a1, $s1, $zero
-#	jal	check_board
-#	beq	$v0, $zero, new_correct
-#solve_step_back:
-#	sw	$zero, 0($s2)	#set to blank and step back
-#	or	$a0, $s0, $zero
-#	or	$a1, $s1, $zero
-#	jal	step_back
-#	j solve_loop
-#new_correct:
-#	or	$a0, $s0, $zero	#we changed a tile
-#	or	$a1, $s1, $zero
-#	or	$a2, $s2, $zero
-#	jal	step_forward
-#
-#	or	$a0, $s0, $zero	#set up our args
-#	or	$a1, $s1, $zero	
-#	jal	set_next_square	#get our next tile
-#	j	solve_loop
+solve_loop:
+	beq	$v0, $zero, solve_done
+	or	$s2, $v0, $zero	#store our new tile
+	
+	lw	$t6, 0($s2)
+	beq	$t6, $s3, set_black
+	beq	$t6, $s4, solve_step_back
+	sw	$s3, 0($s2)	#make it white
+	
+	or	$a0, $s0, $zero #check the board for correctness
+	or	$a1, $s1, $zero	
+	jal	check_board	#will be 0 if correct
+	beq	$v0, $zero, new_correct
+set_black:
+	sw	$s4, 0($s2)	#try black instead
+	or	$a0, $s0, $zero	#check for correctness
+	or	$a1, $s1, $zero
+	jal	check_board
+	beq	$v0, $zero, new_correct
+solve_step_back:
+	sw	$zero, 0($s2)	#set to blank and step back
+	or	$a0, $s0, $zero
+	or	$a1, $s1, $zero
+	jal	step_back
+	j solve_loop
+new_correct:
+	or	$a0, $s0, $zero	#we changed a tile
+	or	$a1, $s1, $zero
+	or	$a2, $s2, $zero
+	jal	step_forward
+
+	or	$a0, $s0, $zero	#set up our args
+	or	$a1, $s1, $zero	
+	jal	set_next_square	#get our next tile
+	j	solve_loop
 solve_done:
 	lw 	$ra, 0($sp)	#restore stack and return
 	lw	$s0, 4($sp)

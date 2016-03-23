@@ -10,6 +10,11 @@
 # CONSTANT DEFINTIONS
 #
 
+#syscall
+EXIT = 10
+
+#for printing
+IMPOSSIBLE_PUZZLE = 2
 
 #
 # DATA BLOCK
@@ -30,7 +35,7 @@ stack_ptr:
 	.text
 	.align 2
 	.globl stepback
-
+	.globl print_predef
 
 #
 # Name: 	step_back
@@ -40,15 +45,27 @@ stack_ptr:
 #		If we try to step back past the start of the puzzle, 
 #		impossible puzzle is triggered from here.
 #
-# Arguments:	a0: ptr to our board array
-#		a1: dimension of board
+# Arguments:	None
+#		
 #
 # Returns:	The address of the square we stepped back to in the board 
 #		array.
 #
 
 step_back:
-	
+	la	$t0, stack_ptr
+	la	$t2, sqr_stack
+	slt	$t3, $t0, $t2		#if we're past the bottom of our stack
+	bne	$t3, $zero, sb_ok
+	ori	$a0, $zero, IMPOSSIBLE_PUZZLE
+	jal	print_predef
+	ori	$v0, $zero, EXIT	#exit the program after printing
+	syscall		
+sb_ok:
+	lw	$t1, 0($t0)	#get ptr to the top of our stack
+	lw	$v0, 0($t1)	#get the top of our stack
+	addi	$t1, $t1, -4	#move top of stack down
+	sw	$t2, 0($t0)
 	jr	$ra
 	.globl step_forward
 
@@ -57,13 +74,15 @@ step_back:
 #
 # Description: 	pushes the tile we're about to change onto the stack.
 #
-# Arguments: 	a0: ptr to our board
-#		a1: the dimension of the board
-#		a2: the address of the square we're setting in the board array
+# Arguments: 	a0: the address of the square we're setting in the board array
 #
 # Returns: 	Nothing
 #
 
 step_forward:
-
-	jr	$ra
+	la	$t0, stack_ptr	#get address of stack ptr
+	lw	$t1, 0($t0)	#get address of top of stack
+	sw	$a0, 0($t1)	#store the new address
+	addi	$t1, $t1, 4	#move the top of our stack
+	sw	$t1, 0($t0)
+	jr	$ra		#return

@@ -1,3 +1,15 @@
+commit ae309e23a423689b7cc6d4e308290bd8f7781aed
+Author: Margaret <med7068@rit.edu>
+Date:   Wed Mar 23 09:52:22 2016 -0400
+
+    found and fixed a lot of problems in the board checking, but theres something odd going on in multiplying and bit shifting not giving intended results. it seems to be functional though so tabling for now
+
+commit 0c4132182ada8ae6a054ebee9817e50f523be8db
+Author: Margaret <med7068@rit.edu>
+Date:   Tue Mar 22 17:08:32 2016 -0400
+
+    implemented the solve function. cant test fully without stepping back and forward implemented, will probably regret not breaking these implementations into smaller testable units
+
 commit a257294d806bc865bcb44d7dd575e05dd8296679
 Author: Margaret <med7068@rit.edu>
 Date:   Tue Mar 22 15:58:00 2016 -0400
