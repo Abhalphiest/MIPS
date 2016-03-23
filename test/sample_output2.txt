@@ -1,0 +1,6 @@
+
+******************
+**  3-In-A-Row  **
+******************
+
+Invalid board size, 3-In-A-Row terminating
