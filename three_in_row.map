@@ -109,7 +109,7 @@ Module:  stepback.obj
  Data segment:  408 bytes, load point 0x10000290
  Symbols:
                  Name Section Mode    Value
-                sb_ok   Text   R   0x0040057c
+                sb_ok   Text   R   0x00400580
          step_forward   Text   RG  0x00400590
             sqr_stack   Data   R   0x10000290
             stack_ptr   Data   R   0x10000420

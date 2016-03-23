@@ -60,19 +60,19 @@
   55 0000               step_back:
   56 0000 3C080000		la	$t0, stack_ptr
      0004 35080000
-  57 0008 3C0A0000		la	$t2, sqr_stack
-     000c 354A0000
-  58 0010 010A582A		slt	$t3, $t0, $t2		#if we're past the bottom of our stack
-  59 0014 15600004		bne	$t3, $zero, sb_ok
-  60 0018 34040002		ori	$a0, $zero, IMPOSSIBLE_PUZZLE
-  61 001c 0C000000		jal	print_predef
-  62 0020 3402000A		ori	$v0, $zero, EXIT	#exit the program after printing
-  63 0024 0000000C		syscall		
-  64 0028               sb_ok:
-  65 0028 8D090000		lw	$t1, 0($t0)	#get ptr to the top of our stack
-  66 002c 8D220000		lw	$v0, 0($t1)	#get the top of our stack
-  67 0030 2129FFFC		addi	$t1, $t1, -4	#move top of stack down
-  68 0034 AD0A0000		sw	$t2, 0($t0)
+  57 0008 8D090000		lw 	$t1, 0($t0)		#get ptr to the top of our stack
+  58 000c 3C0A0000		la	$t2, sqr_stack
+     0010 354A0000
+  59 0014 012A582A		slt	$t3, $t1, $t2		#if we're past the bottom of our stack
+  60 0018 11600004		beq	$t3, $zero, sb_ok
+  61 001c 34040002		ori	$a0, $zero, IMPOSSIBLE_PUZZLE
+  62 0020 0C000000		jal	print_predef
+  63 0024 3402000A		ori	$v0, $zero, EXIT	#exit the program after printing
+  64 0028 0000000C		syscall		
+  65 002c               sb_ok:
+  66 002c 2129FFFC		addi	$t1, $t1, -4	#move the top of the stack down
+  67 0030 8D220000		lw	$v0, 0($t1)	#get the top of our stack
+  68 0034 AD090000		sw	$t1, 0($t0)
   69 0038 03E00008		jr	$ra
   70 003c               	.globl step_forward
   71 003c               
@@ -99,7 +99,7 @@
 EXIT               = 0000000A   
 IMPOSSIBLE_PUZZLE  = 00000002   
 print_predef         ******** XG
-sb_ok                00000028 R  text 
+sb_ok                0000002C R  text 
 sqr_stack            00000000 R  data 
 stack_ptr            00000190 R  data 
 step_back            00000000 R  text 
