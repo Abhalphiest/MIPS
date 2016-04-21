@@ -6,11 +6,11 @@ Module:  three_in_row.obj
  Data segment:  400 bytes, load point 0x10000000
  Symbols:
                  Name Section Mode    Value
-                 even   Text   R   0x00400034
-            dim_valid   Text   R   0x00400054
+                 even   Text   R   0x0040003c
+            dim_valid   Text   R   0x0040005c
          FINAL_PUZZLE          A   0x00000005
              READ_INT          A   0x00000005
-           board_loop   Text   R   0x00400068
+           board_loop   Text   R   0x00400070
                 valid   Text   R   0x00400118
        PROGRAM_BANNER          A   0x00000003
                  main   Text   RG  0x00400000
@@ -23,7 +23,7 @@ Module:  three_in_row.obj
     IMPOSSIBLE_PUZZLE          A   0x00000002
    enter_square_value   Text   R   0x004000e8
                  EXIT          A   0x0000000a
-      board_loop_done   Text   R   0x00400088
+      board_loop_done   Text   R   0x00400090
 
 Module:  print.obj
  Text segment:  328 bytes, load point 0x0040012c

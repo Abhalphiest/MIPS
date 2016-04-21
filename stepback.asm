@@ -67,6 +67,7 @@ sb_ok:
 	lw	$v0, 0($t1)	#get the top of our stack
 	sw	$t1, 0($t0)
 	jr	$ra
+
 	.globl step_forward
 
 #

@@ -97,7 +97,7 @@ solve_step_back:
 	sw	$zero, 0($s2)	#set to blank and step back
 	or	$a0, $s2, $zero
 	jal	step_back
-	j solve_loop
+	j 	solve_loop
 new_correct:
 	or	$a0, $s2, $zero	#we changed a tile
 	jal	step_forward

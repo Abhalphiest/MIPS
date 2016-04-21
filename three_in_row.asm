@@ -61,6 +61,9 @@ main:
 	sw	$s1, 8($sp)
 	sw	$s2, 12($sp)
 
+	ori	$a0, $zero, PROGRAM_BANNER #print our banner
+	jal	print_predef
+
 	ori	$v0, $zero, READ_INT	#get the dimension
 	syscall
 
@@ -102,23 +105,20 @@ board_loop_done:
 
 
 
-	ori	$a0, $zero, PROGRAM_BANNER	#print our banner
-	jal	print_predef
-
 
 	ori	$a0, $zero, INITIAL_PUZZLE	#print header
 	jal	print_predef
-					# print board
+						#print board
 	la	$a0, board_arr
-	or	$a1, $s0, $zero		#load args for board printing
+	or	$a1, $s0, $zero			#load args for board printing
 	jal	print_board
 	
-	la	$a0, board_arr		#solve
+	la	$a0, board_arr			#solve
 	or	$a1, $s0, $zero
 	jal	solve
 
-						
-					#solution is over, so output
+							
+						#solution is over, so output
 	ori	$a0, $zero, FINAL_PUZZLE
 	jal	print_predef		
 
@@ -129,10 +129,10 @@ board_loop_done:
 main_done:
 	lw	$s2, 12($sp)
 	lw	$s1, 8($sp)
-	lw	$s0, 4($sp)		#restore stack
+	lw	$s0, 4($sp)			#restore stack
 	lw	$ra, 0($sp)
 	addi	$sp, $sp, 16	
-	jr	$ra			#return
+	jr	$ra				#return
 #
 # Name: enter_square_value
 #

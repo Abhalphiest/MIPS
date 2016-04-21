@@ -1,3 +1,9 @@
+commit 9870ea834b637a1c1cd6331a8b9ab00bf2f64301
+Author: Margaret <med7068@rit.edu>
+Date:   Wed Mar 23 17:57:45 2016 -0400
+
+    added clean to makefile
+
 commit 8c7f1523ecb75be28aec4cc6d715e5f58504d72a
 Author: Margaret <med7068@rit.edu>
 Date:   Wed Mar 23 11:51:08 2016 -0400

@@ -97,7 +97,7 @@
   97 0090 AE400000		sw	$zero, 0($s2)	#set to blank and step back
   98 0094 02402025		or	$a0, $s2, $zero
   99 0098 0C000000		jal	step_back
- 100 009c 08000015		j solve_loop
+ 100 009c 08000015		j 	solve_loop
  101 00a0               new_correct:
  102 00a0 02402025		or	$a0, $s2, $zero	#we changed a tile
  103 00a4 0C000000		jal	step_forward

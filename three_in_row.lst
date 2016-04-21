@@ -66,50 +66,50 @@
   61 000c AFB10008		sw	$s1, 8($sp)
   62 0010 AFB2000C		sw	$s2, 12($sp)
   63 0014               
-  64 0014 34020005		ori	$v0, $zero, READ_INT	#get the dimension
-  65 0018 0000000C		syscall
+  64 0014 34040003		ori	$a0, $zero, PROGRAM_BANNER #print our banner
+  65 0018 0C000000		jal	print_predef
   66 001c               
-  67 001c 00408025		or	$s0, $v0, $zero		#check value for evenness
-  68 0020 32080001		andi	$t0, $s0, 1		#will be 0 if even, 1 if odd
-  69 0024 11000003		beq	$t0, $zero, even
-  70 0028 34040000		ori	$a0, $zero, INVALID_BOARD_SIZE
-  71 002c 0C000000		jal	print_predef		#print out our error message
-  72 0030 08000034		j	main_done		#get out of the program
-  73 0034               even:
-  74 0034 2A080002		slti	$t0, $s0, 2		#less than 2
-  75 0038 2A09000B		slti	$t1, $s0, 11		#less than 11
-  76 003c 01094820		add	$t1, $t0, $t1		#if less than 2, will be 2
-  77 0040               					#if greater than 10 will be 0
-  78 0040               					#if in range will be 1
-  79 0040               
-  80 0040 39290001		xori	$t1, $t1, 1		#if in range will be 0
-  81 0044 11200003		beq	$t1, $zero, dim_valid	#break on within range
-  82 0048 34040000		ori 	$a0, $zero, INVALID_BOARD_SIZE	
-  83 004c 0C000000		jal	print_predef		#print our error message
-  84 0050 08000034		j	main_done
-  85 0054               dim_valid:	
-  86 0054 01009024		and	$s2, $t0, $zero		#set our loop control variable to 0
-  87 0058 3C040000		la	$a0, board_arr		#get our memory for the board array
-     005c 34840000
-  88 0060 02100018		mult	$s0, $s0
-  89 0064 00008812		mflo	$s1			#s1 is now n^2
-  90 0068               	
-  91 0068               board_loop:
-  92 0068 12510007		beq	$s2, $s1, board_loop_done
-  93 006c 34020005		ori	$v0, $zero, READ_INT	#get our next square
-  94 0070 0000000C		syscall	
-  95 0074 00022825		or	$a1, $zero, $v0		#get ready to pass it to be checked
-  96 0078 0C00003A		jal	enter_square_value
-  97 007c 22520001		addi	$s2, $s2, 1
-  98 0080 20840004		addi	$a0, $a0, 4		#integer is a byte
-  99 0084 0800001A		j	board_loop		#back to top
- 100 0088               board_loop_done:
- 101 0088               
- 102 0088               
- 103 0088               
- 104 0088               
- 105 0088 34040003		ori	$a0, $zero, PROGRAM_BANNER	#print our banner
- 106 008c 0C000000		jal	print_predef
+  67 001c 34020005		ori	$v0, $zero, READ_INT	#get the dimension
+  68 0020 0000000C		syscall
+  69 0024               
+  70 0024 00408025		or	$s0, $v0, $zero		#check value for evenness
+  71 0028 32080001		andi	$t0, $s0, 1		#will be 0 if even, 1 if odd
+  72 002c 11000003		beq	$t0, $zero, even
+  73 0030 34040000		ori	$a0, $zero, INVALID_BOARD_SIZE
+  74 0034 0C000000		jal	print_predef		#print out our error message
+  75 0038 08000034		j	main_done		#get out of the program
+  76 003c               even:
+  77 003c 2A080002		slti	$t0, $s0, 2		#less than 2
+  78 0040 2A09000B		slti	$t1, $s0, 11		#less than 11
+  79 0044 01094820		add	$t1, $t0, $t1		#if less than 2, will be 2
+  80 0048               					#if greater than 10 will be 0
+  81 0048               					#if in range will be 1
+  82 0048               
+  83 0048 39290001		xori	$t1, $t1, 1		#if in range will be 0
+  84 004c 11200003		beq	$t1, $zero, dim_valid	#break on within range
+  85 0050 34040000		ori 	$a0, $zero, INVALID_BOARD_SIZE	
+  86 0054 0C000000		jal	print_predef		#print our error message
+  87 0058 08000034		j	main_done
+  88 005c               dim_valid:	
+  89 005c 01009024		and	$s2, $t0, $zero		#set our loop control variable to 0
+  90 0060 3C040000		la	$a0, board_arr		#get our memory for the board array
+     0064 34840000
+  91 0068 02100018		mult	$s0, $s0
+  92 006c 00008812		mflo	$s1			#s1 is now n^2
+  93 0070               	
+  94 0070               board_loop:
+  95 0070 12510007		beq	$s2, $s1, board_loop_done
+  96 0074 34020005		ori	$v0, $zero, READ_INT	#get our next square
+  97 0078 0000000C		syscall	
+  98 007c 00022825		or	$a1, $zero, $v0		#get ready to pass it to be checked
+  99 0080 0C00003A		jal	enter_square_value
+ 100 0084 22520001		addi	$s2, $s2, 1
+ 101 0088 20840004		addi	$a0, $a0, 4		#integer is a byte
+ 102 008c 0800001C		j	board_loop		#back to top
+ 103 0090               board_loop_done:
+ 104 0090               
+ 105 0090               
+ 106 0090               
  107 0090               
  108 0090               
  109 0090 34040004		ori	$a0, $zero, INITIAL_PUZZLE	#print header
@@ -192,11 +192,11 @@ NEWLINE              = 00000006
 PROGRAM_BANNER       = 00000003   
 READ_INT             = 00000005   
 board_arr              00000000 R  data 
-board_loop             00000068 R  text 
-board_loop_done        00000088 R  text 
-dim_valid              00000054 R  text 
+board_loop             00000070 R  text 
+board_loop_done        00000090 R  text 
+dim_valid              0000005C R  text 
 enter_square_value     000000E8 R  text 
-even                   00000034 R  text 
+even                   0000003C R  text 
 main                   00000000 RG text 
 main_done              000000D0 R  text 
 print_board            ******** XG
