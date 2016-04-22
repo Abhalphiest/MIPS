@@ -63,43 +63,44 @@
   57 0008 8D090000		lw 	$t1, 0($t0)		#get ptr to the top of our stack
   58 000c 3C0A0000		la	$t2, sqr_stack
      0010 354A0000
-  59 0014 012A582A		slt	$t3, $t1, $t2		#if we're past the bottom of our stack
-  60 0018 11600004		beq	$t3, $zero, sb_ok
-  61 001c 34040002		ori	$a0, $zero, IMPOSSIBLE_PUZZLE
-  62 0020 0C000000		jal	print_predef
-  63 0024 3402000A		ori	$v0, $zero, EXIT	#exit the program after printing
-  64 0028 0000000C		syscall		
-  65 002c               sb_ok:
-  66 002c 2129FFFC		addi	$t1, $t1, -4	#move the top of the stack down
-  67 0030 8D220000		lw	$v0, 0($t1)	#get the top of our stack
+  59 0014 2129FFFC		addi	$t1, $t1, -4	#move the top of the stack down
+  60 0018 012A582A		slt	$t3, $t1, $t2		#if we're past the bottom of our stack
+  61 001c 11600004		beq	$t3, $zero, sb_ok
+  62 0020 34040002		ori	$a0, $zero, IMPOSSIBLE_PUZZLE
+  63 0024 0C000000		jal	print_predef
+  64 0028 3402000A		ori	$v0, $zero, EXIT	#exit the program after printing
+  65 002c 0000000C		syscall		
+  66 0030               sb_ok:
+  67 0030 8D220000		lw	$v0, 0($t1)	#get  the new top of our stack
   68 0034 AD090000		sw	$t1, 0($t0)
   69 0038 03E00008		jr	$ra
-  70 003c               	.globl step_forward
-  71 003c               
-  72 003c               #
-  73 003c               # Name: 	step_forward
-  74 003c               #
-  75 003c               # Description: 	pushes the tile we're about to change onto the stack.
-  76 003c               #
-  77 003c               # Arguments: 	a0: the address of the square we're setting in the board array
-  78 003c               #
-  79 003c               # Returns: 	Nothing
-  80 003c               #
-  81 003c               
-  82 003c               step_forward:
-  83 003c 3C080000		la	$t0, stack_ptr	#get address of stack ptr
+  70 003c               
+  71 003c               	.globl step_forward
+  72 003c               
+  73 003c               #
+  74 003c               # Name: 	step_forward
+  75 003c               #
+  76 003c               # Description: 	pushes the tile we're about to change onto the stack.
+  77 003c               #
+  78 003c               # Arguments: 	a0: the address of the square we're setting in the board array
+  79 003c               #
+  80 003c               # Returns: 	Nothing
+  81 003c               #
+  82 003c               
+  83 003c               step_forward:
+  84 003c 3C080000		la	$t0, stack_ptr	#get address of stack ptr
      0040 35080000
-  84 0044 8D090000		lw	$t1, 0($t0)	#get address of top of stack
-  85 0048 AD240000		sw	$a0, 0($t1)	#store the new address
-  86 004c 21290004		addi	$t1, $t1, 4	#move the top of our stack
-  87 0050 AD090000		sw	$t1, 0($t0)
-  88 0054 03E00008		jr	$ra		#return
+  85 0044 8D090000		lw	$t1, 0($t0)	#get address of top of stack
+  86 0048 AD240000		sw	$a0, 0($t1)	#store the new address
+  87 004c 21290004		addi	$t1, $t1, 4	#move the top of our stack
+  88 0050 AD090000		sw	$t1, 0($t0)
+  89 0054 03E00008		jr	$ra		#return
 
 
 EXIT               = 0000000A   
 IMPOSSIBLE_PUZZLE  = 00000002   
 print_predef         ******** XG
-sb_ok                0000002C R  text 
+sb_ok                00000030 R  text 
 sqr_stack            00000000 R  data 
 stack_ptr            00000190 R  data 
 step_back            00000000 R  text 

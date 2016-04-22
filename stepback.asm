@@ -56,6 +56,7 @@ step_back:
 	la	$t0, stack_ptr
 	lw 	$t1, 0($t0)		#get ptr to the top of our stack
 	la	$t2, sqr_stack
+	addi	$t1, $t1, -4	#move the top of the stack down
 	slt	$t3, $t1, $t2		#if we're past the bottom of our stack
 	beq	$t3, $zero, sb_ok
 	ori	$a0, $zero, IMPOSSIBLE_PUZZLE
@@ -63,8 +64,7 @@ step_back:
 	ori	$v0, $zero, EXIT	#exit the program after printing
 	syscall		
 sb_ok:
-	addi	$t1, $t1, -4	#move the top of the stack down
-	lw	$v0, 0($t1)	#get the top of our stack
+	lw	$v0, 0($t1)	#get  the new top of our stack
 	sw	$t1, 0($t0)
 	jr	$ra
 

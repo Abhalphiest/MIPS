@@ -114,19 +114,19 @@
  108 0090               
  109 0090 34040004		ori	$a0, $zero, INITIAL_PUZZLE	#print header
  110 0094 0C000000		jal	print_predef
- 111 0098               					# print board
+ 111 0098               						#print board
  112 0098 3C040000		la	$a0, board_arr
      009c 34840000
- 113 00a0 02002825		or	$a1, $s0, $zero		#load args for board printing
+ 113 00a0 02002825		or	$a1, $s0, $zero			#load args for board printing
  114 00a4 0C000000		jal	print_board
  115 00a8               	
- 116 00a8 3C040000		la	$a0, board_arr		#solve
+ 116 00a8 3C040000		la	$a0, board_arr			#solve
      00ac 34840000
  117 00b0 02002825		or	$a1, $s0, $zero
  118 00b4 0C000000		jal	solve
  119 00b8               
- 120 00b8               						
- 121 00b8               					#solution is over, so output
+ 120 00b8               							
+ 121 00b8               						#solution is over, so output
  122 00b8 34040005		ori	$a0, $zero, FINAL_PUZZLE
  123 00bc 0C000000		jal	print_predef		
  124 00c0               
@@ -138,10 +138,10 @@
  129 00d0               main_done:
  130 00d0 8FB2000C		lw	$s2, 12($sp)
  131 00d4 8FB10008		lw	$s1, 8($sp)
- 132 00d8 8FB00004		lw	$s0, 4($sp)		#restore stack
+ 132 00d8 8FB00004		lw	$s0, 4($sp)			#restore stack
  133 00dc 8FBF0000		lw	$ra, 0($sp)
  134 00e0 23BD0010		addi	$sp, $sp, 16	
- 135 00e4 03E00008		jr	$ra			#return
+ 135 00e4 03E00008		jr	$ra				#return
  136 00e8               #
  137 00e8               # Name: enter_square_value
  138 00e8               #

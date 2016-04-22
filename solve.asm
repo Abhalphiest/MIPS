@@ -69,7 +69,6 @@ solve:
 	jal	print_predef
 	ori	$v0, $zero, EXIT
 	syscall			#force exit
-	jal	print_predef
 init_valid:
 	or	$a0, $s0, $zero
 	or	$a1, $s1, $zero

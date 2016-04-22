@@ -1,3 +1,9 @@
+commit d234dffb7a7dfc6e28619d003326ff5a8516386a
+Author: Margaret <med7068@rit.edu>
+Date:   Thu Apr 21 17:30:13 2016 -0400
+
+    fixed banner print timing
+
 commit 9870ea834b637a1c1cd6331a8b9ab00bf2f64301
 Author: Margaret <med7068@rit.edu>
 Date:   Wed Mar 23 17:57:45 2016 -0400
